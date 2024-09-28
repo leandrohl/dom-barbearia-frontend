@@ -9,11 +9,15 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        primary: "#171717",
+        secondary: "#ffffff",
       },
+      fontFamily: {
+        sans: ['var(--font-geist-sans)']
+      }
     },
   },
   plugins: [],
 };
+
 export default config;

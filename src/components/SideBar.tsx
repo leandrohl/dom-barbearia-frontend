@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import React, { useState } from 'react';
 import { ArrowRightStartOnRectangleIcon, ChevronLeftIcon } from '@heroicons/react/24/outline'
-import menuItems from '@/app/content/menuItems';
+import menuItems from '@/content/menuItems';
 
 const Sidebar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);

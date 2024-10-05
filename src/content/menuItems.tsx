@@ -23,27 +23,27 @@ const menuItems = [
   {
     title: 'Perfil',
     icon: <UsersIcon className="w-6 h-6" />,
-    link: '#',
+    link: '/admin/profile',
   },
   {
     title: 'Cliente',
     icon: <IdentificationIcon className="w-6 h-6" />,
-    link: '#',
+    link: '/admin/client',
   },
   {
     title: 'Funcionário',
     icon: <WrenchScrewdriverIcon className="w-6 h-6" />,
-    link: '#',
+    link: '/admin/employee',
   },
   {
     title: 'Serviço',
     icon: <ScissorsIcon className="w-6 h-6" />,
-    link: '#',
+    link: '/admin/service',
   },
   {
     title: 'Produto',
     icon: <ShoppingBagIcon className="w-6 h-6" />,
-    link: '#',
+    link: '/admin/product',
   },
 ];
 

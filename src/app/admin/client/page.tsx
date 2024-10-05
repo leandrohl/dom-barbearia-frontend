@@ -15,7 +15,7 @@ interface User {
   email: string;
 }
 
-export default function User() {
+export default function Client() {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
@@ -52,12 +52,12 @@ export default function User() {
   return (
     <div className="flex h-screen">
       <div className="flex-1 p-4 bg-gray-100">
-        <h1 className="text-2xl font-bold mb-4 text-primary">Listagem de Usuários</h1>
+        <h1 className="text-2xl font-bold mb-4 text-primary">Listagem de Clientes</h1>
         <Button
           onClick={handleAddUser}
           variant='primary'
         >
-          Cadastrar Usuário
+          Cadastrar Cliente
         </Button>
         <table className="min-w-full bg-white border border-gray-300 text-primary mt-4">
           <thead>

@@ -3,15 +3,15 @@ import React from 'react';
 interface ButtonProps {
   children: React.ReactNode;
   onClick: () => void;
-  variant: 'primary'
+  variant: 'primary' | 'primary-outline'
 }
 
 const Button = ({ children, onClick, variant = 'primary' }: ButtonProps) => {
-  const baseStyles = "px-4 py-2 rounded-md font-semibold focus:outline-none focus:ring";
+  const baseStyles = "px-4 py-2 rounded-md focus:outline-none focus:ring";
 
   const variantStyles = variant === 'primary'
     ? "bg-primary hover:brightness-90 text-secondary"
-    : "bg-gray-500 hover:bg-gray-600 text-white";
+    : "bg-secondary border border-primary hover:bg-primary hover:text-white text-primary";
 
   return (
     <button className={`${baseStyles} ${variantStyles}`} onClick={onClick}>

@@ -4,8 +4,11 @@ import Button from '@/components/Button';
 import Input from '@/components/Input';
 import api from '@/services/api';
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 const Login = () => {
+  const router = useRouter();
+
   const [login, setLogin] = useState({
     email: '',
     password: ''
@@ -20,6 +23,7 @@ const Login = () => {
     try {
       const result = await api.post("/auth/login", {...login})
       console.log(result)
+      router.push('/login');
     } catch (error) {
       console.log(error)
     }

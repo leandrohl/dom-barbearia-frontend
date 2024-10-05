@@ -1,6 +1,7 @@
 "use client"
 
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import { useRouter } from 'next/navigation';
+import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 
 interface AuthContextType {
   user: { email: string } | null;
@@ -12,6 +13,16 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<{ email: string } | null>(null);
+  const router = useRouter();
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    } else {
+      // router.push('/login');
+    }
+  }, [router]);
 
   const login = (email: string) => {
     setUser({ email });

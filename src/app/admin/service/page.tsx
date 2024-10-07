@@ -8,37 +8,39 @@ import {
   TrashIcon
 } from '@heroicons/react/24/outline'
 import Button from '@/components/Button';
+import api from '@/services/api';
 
-interface User {
+interface Service {
   id: number;
-  name: string;
-  email: string;
+  descricao: string;
+  preco: number;
 }
 
 export default function Service() {
-  const [users, setUsers] = useState<User[]>([]);
+  const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  console.log(loading)
+  const fetchServices = async () => {
+    setLoading(true);
+
+    try {
+      const data = await api.get("/service");
+      setServices(data);
+    } catch {
+    } finally {
+      setLoading(false);
+    }
+  }
 
   useEffect(() => {
-    const fetchUsers = async () => {
-      setLoading(true);
-      const fetchedUsers = [
-        { id: 1, name: 'John Doe', email: 'john@example.com' },
-        { id: 2, name: 'Jane Smith', email: 'jane@example.com' },
-      ];
-      setUsers(fetchedUsers);
-      setLoading(false);
-    };
-
-    fetchUsers();
+    fetchServices();
+    console.log(loading);
   }, []);
 
   const handleDelete = async (id: number) => {
-    const updatedUsers = users.filter(user => user.id !== id);
-    setUsers(updatedUsers);
+    const updatedUsers = services.filter(user => user.id !== id);
+    setServices(updatedUsers);
   };
 
   const handleAddUser = () => {
@@ -63,28 +65,26 @@ export default function Service() {
           <thead>
             <tr>
               <th className="border border-gray-300 p-2">ID</th>
-              <th className="border border-gray-300 p-2">Nome</th>
-              <th className="border border-gray-300 p-2">Email</th>
-              <th className="border border-gray-300 p-2">Perfil</th>
+              <th className="border border-gray-300 p-2">Descrição</th>
+              <th className="border border-gray-300 p-2">Preço</th>
               <th className="border border-gray-300 p-2">Ações</th>
             </tr>
           </thead>
           <tbody>
-            {users.map(user => (
-              <tr key={user.id}>
-                <td className="border border-gray-300 p-2">{user.id}</td>
-                <td className="border border-gray-300 p-2">{user.name}</td>
-                <td className="border border-gray-300 p-2">{user.email}</td>
-                <td className="border border-gray-300 p-2">Administrador</td>
+            {services.map(service => (
+              <tr key={service.id}>
+                <td className="border border-gray-300 p-2">{service.id}</td>
+                <td className="border border-gray-300 p-2">{service.descricao}</td>
+                <td className="border border-gray-300 p-2">{service.preco}</td>
                 <td className="border border-gray-300 p-2 w-32">
                   <button
-                    onClick={() => handleEdit(user.id)}
+                    onClick={() => handleEdit(service.id)}
                     className="mr-2 p-1 bg-primary text-white rounded"
                   >
                     <PencilIcon className="w-6 h-6" />
                   </button>
                   <button
-                    onClick={() => handleDelete(user.id)}
+                    onClick={() => handleDelete(service.id)}
                     className="p-1 bg-primary text-white rounded"
                   >
                     <TrashIcon className="w-6 h-6" />

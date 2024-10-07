@@ -8,37 +8,43 @@ import {
   TrashIcon
 } from '@heroicons/react/24/outline'
 import Button from '@/components/Button';
+import api from '@/services/api';
 
-interface User {
+interface Employee {
   id: number;
-  name: string;
+  nome: string;
   email: string;
+  telefone: string;
+  cpf: string;
+  dataContratacao: string;
+  ativo: string;
 }
 
 export default function Employee() {
-  const [users, setUsers] = useState<User[]>([]);
+  const [employees, setEmployees] = useState<Employee[]>([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  console.log(loading)
+  const fetchEmployees = async () => {
+    setLoading(true);
+
+    try {
+      const data = await api.get("/employees");
+      setEmployees(data);
+    } catch {
+    } finally {
+      setLoading(false);
+    }
+  }
 
   useEffect(() => {
-    const fetchUsers = async () => {
-      setLoading(true);
-      const fetchedUsers = [
-        { id: 1, name: 'John Doe', email: 'john@example.com' },
-        { id: 2, name: 'Jane Smith', email: 'jane@example.com' },
-      ];
-      setUsers(fetchedUsers);
-      setLoading(false);
-    };
-
-    fetchUsers();
+    fetchEmployees();
+    console.log(loading);
   }, []);
 
   const handleDelete = async (id: number) => {
-    const updatedUsers = users.filter(user => user.id !== id);
-    setUsers(updatedUsers);
+    const updatedUsers = employees.filter(user => user.id !== id);
+    setEmployees(updatedUsers);
   };
 
   const handleAddUser = () => {
@@ -64,27 +70,33 @@ export default function Employee() {
             <tr>
               <th className="border border-gray-300 p-2">ID</th>
               <th className="border border-gray-300 p-2">Nome</th>
+              <th className="border border-gray-300 p-2">CPF</th>
               <th className="border border-gray-300 p-2">Email</th>
-              <th className="border border-gray-300 p-2">Perfil</th>
+              <th className="border border-gray-300 p-2">Telefone</th>
+              <th className="border border-gray-300 p-2">Data de Contratação</th>
+              <th className="border border-gray-300 p-2">Ativo</th>
               <th className="border border-gray-300 p-2">Ações</th>
             </tr>
           </thead>
           <tbody>
-            {users.map(user => (
-              <tr key={user.id}>
-                <td className="border border-gray-300 p-2">{user.id}</td>
-                <td className="border border-gray-300 p-2">{user.name}</td>
-                <td className="border border-gray-300 p-2">{user.email}</td>
-                <td className="border border-gray-300 p-2">Administrador</td>
+            {employees.map(employee => (
+              <tr key={employee.id}>
+                <td className="border border-gray-300 p-2">{employee.id}</td>
+                <td className="border border-gray-300 p-2">{employee.nome}</td>
+                <td className="border border-gray-300 p-2">{employee.cpf}</td>
+                <td className="border border-gray-300 p-2">{employee.email}</td>
+                <td className="border border-gray-300 p-2">{employee.telefone}</td>
+                <td className="border border-gray-300 p-2">{employee.dataContratacao}</td>
+                <td className="border border-gray-300 p-2">{employee.ativo ? 'S' : 'N'}</td>
                 <td className="border border-gray-300 p-2 w-32">
                   <button
-                    onClick={() => handleEdit(user.id)}
+                    onClick={() => handleEdit(employee.id)}
                     className="mr-2 p-1 bg-primary text-white rounded"
                   >
                     <PencilIcon className="w-6 h-6" />
                   </button>
                   <button
-                    onClick={() => handleDelete(user.id)}
+                    onClick={() => handleDelete(employee.id)}
                     className="p-1 bg-primary text-white rounded"
                   >
                     <TrashIcon className="w-6 h-6" />

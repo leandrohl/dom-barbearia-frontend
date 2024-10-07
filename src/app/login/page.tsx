@@ -5,25 +5,35 @@ import Input from '@/components/Input';
 import api from '@/services/api';
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/context/AuthContext';
 
 const Login = () => {
   const router = useRouter();
+  const { login } = useAuth();
 
-  const [login, setLogin] = useState({
+  const [loginData, setLoginData] = useState({
     email: '',
     password: ''
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setLogin((prev) => ({ ...prev, [name]: value }));
+    setLoginData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleLogin = async () => {
     try {
-      const result = await api.post("/auth/login", {...login})
-      console.log(result)
-      router.push('/login');
+      const data = await api.post("/auth/login", {...loginData});
+
+      const userObj = {
+        name: data.user.nome,
+        email: data.user.email,
+        profileId: data.user.perfil
+      }
+
+      login(userObj, data.token)
+
+      router.push('/admin');
     } catch (error) {
       console.log(error)
     }
@@ -37,14 +47,14 @@ const Login = () => {
           <Input
             name='email'
             label="Email"
-            value={login.email}
+            value={loginData.email}
             type='email'
             onChange={handleChange}
           />
           <Input
             name='password'
             label="Senha"
-            value={login.password}
+            value={loginData.password}
             type='password'
             onChange={handleChange}
           />

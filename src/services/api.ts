@@ -3,47 +3,85 @@
 const baseUrl = "http://localhost:5000";
 
 const api = {
-    get: (endpoint: string) => {
-        const p = fetch(baseUrl + endpoint, {
-            credentials: "include"
-        })
+    get: async (endpoint: string) => {
+      const token = localStorage.getItem('token');
 
-        return p;
+      const response = await fetch(baseUrl + endpoint, {
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+      })
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      return data;
     },
 
-    post: (endpoint: string, body: any) => {
-      const p = fetch(baseUrl + endpoint, {
+    post: async (endpoint: string, body: any) => {
+      const token = localStorage.getItem('token');
+
+      const response = await fetch(baseUrl + endpoint, {
             method: "POST",
             credentials: "include",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
             },
             body: JSON.stringify(body)
         })
 
-        return p;
+        if (!response.ok) {
+          throw new Error(`Error: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        return data;
     },
 
-    put: (endpoint: string, body: any) => {
-      const p = fetch(baseUrl + endpoint, {
+    put: async (endpoint: string, body: any) => {
+      const token = localStorage.getItem('token');
+
+      const response = await fetch(baseUrl + endpoint, {
             method: "PUT",
             credentials: "include",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
             },
             body: JSON.stringify(body)
         })
 
-        return p;
+        if (!response.ok) {
+          throw new Error(`Error: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        return data;
     },
 
-    delete: (endpoint: string) => {
-      const p = fetch(baseUrl + endpoint, {
+    delete: async (endpoint: string) => {
+      const token = localStorage.getItem('token');
+
+      const response = await fetch(baseUrl + endpoint, {
             method: "DELETE",
-            credentials: "include"
+            credentials: "include",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${token}`
+            },
         })
 
-        return p;
+        if (!response.ok) {
+          throw new Error(`Error: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        return data;
     }
 }
 

@@ -8,37 +8,41 @@ import {
   TrashIcon
 } from '@heroicons/react/24/outline'
 import Button from '@/components/Button';
-
-interface User {
-  id: number;
-  name: string;
-  email: string;
-}
+import api from '@/services/api';
+import { IUser } from '@/@types/user'
 
 export default function User() {
-  const [users, setUsers] = useState<User[]>([]);
+  const [users, setUsers] = useState<IUser[]>([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  console.log(loading)
+  const fetchUsers = async () => {
+    setLoading(true);
+
+    try {
+      const data = await api.get("/users");
+      setUsers(data);
+    } catch {
+    } finally {
+      setLoading(false);
+    }
+  }
 
   useEffect(() => {
-    const fetchUsers = async () => {
-      setLoading(true);
-      const fetchedUsers = [
-        { id: 1, name: 'John Doe', email: 'john@example.com' },
-        { id: 2, name: 'Jane Smith', email: 'jane@example.com' },
-      ];
-      setUsers(fetchedUsers);
-      setLoading(false);
-    };
-
     fetchUsers();
   }, []);
 
   const handleDelete = async (id: number) => {
-    const updatedUsers = users.filter(user => user.id !== id);
-    setUsers(updatedUsers);
+    setLoading(true);
+
+    try {
+      await api.delete(`/users/${id}`);
+      const updatedUsers = users.filter(user => user.id !== id);
+      setUsers(updatedUsers);
+    } catch {
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleAddUser = () => {
@@ -73,9 +77,9 @@ export default function User() {
             {users.map(user => (
               <tr key={user.id}>
                 <td className="border border-gray-300 p-2">{user.id}</td>
-                <td className="border border-gray-300 p-2">{user.name}</td>
+                <td className="border border-gray-300 p-2">{user.nome}</td>
                 <td className="border border-gray-300 p-2">{user.email}</td>
-                <td className="border border-gray-300 p-2">Administrador</td>
+                <td className="border border-gray-300 p-2">{user.perfil}</td>
                 <td className="border border-gray-300 p-2 w-32">
                   <button
                     onClick={() => handleEdit(user.id)}

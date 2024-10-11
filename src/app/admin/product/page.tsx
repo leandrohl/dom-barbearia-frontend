@@ -9,16 +9,10 @@ import {
 } from '@heroicons/react/24/outline'
 import Button from '@/components/Button';
 import api from '@/services/api';
-
-interface Product {
-  id: number;
-  descricao: string;
-  preco: number;
-  quantidade: number;
-}
+import { IProduct } from '@/@types/product';
 
 export default function Product() {
-  const [products, setProducts] = useState<Product[]>([]);
+  const [products, setProducts] = useState<IProduct[]>([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
@@ -40,8 +34,16 @@ export default function Product() {
   }, []);
 
   const handleDelete = async (id: number) => {
-    const updatedUsers = products.filter(user => user.id !== id);
-    setProducts(updatedUsers);
+    setLoading(true);
+
+    try {
+      await api.delete(`/product/${id}`);
+      const updatedProducts = products.filter(product => product.id !== id);
+      setProducts(updatedProducts);
+    } catch {
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleAddUser = () => {

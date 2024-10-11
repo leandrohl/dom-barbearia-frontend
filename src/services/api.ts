@@ -2,6 +2,17 @@
 'use client'
 const baseUrl = "http://localhost:5000";
 
+const handleUnauthorized = (response: Response) => {
+  if (response.status === 401) {
+      window.location.href = '/login';
+      localStorage.removeItem('user');
+      localStorage.removeItem('token');
+      return true;
+  }
+  return false;
+};
+
+
 const api = {
     get: async (endpoint: string) => {
       const token = localStorage.getItem('token');
@@ -13,6 +24,8 @@ const api = {
           "Authorization": `Bearer ${token}`
         },
       })
+
+      if (handleUnauthorized(response)) return;
 
       if (!response.ok) {
         throw new Error(`Error: ${response.statusText}`);
@@ -35,6 +48,8 @@ const api = {
             body: JSON.stringify(body)
         })
 
+        if (handleUnauthorized(response)) return;
+
         if (!response.ok) {
           throw new Error(`Error: ${response.statusText}`);
         }
@@ -56,6 +71,8 @@ const api = {
             body: JSON.stringify(body)
         })
 
+        if (handleUnauthorized(response)) return;
+
         if (!response.ok) {
           throw new Error(`Error: ${response.statusText}`);
         }
@@ -75,6 +92,8 @@ const api = {
               "Authorization": `Bearer ${token}`
             },
         })
+
+        if (handleUnauthorized(response)) return;
 
         if (!response.ok) {
           throw new Error(`Error: ${response.statusText}`);

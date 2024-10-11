@@ -34,8 +34,16 @@ export default function Profile() {
   }, []);
 
   const handleDelete = async (id: number) => {
-    const updatedUsers = profiles.filter(user => user.id !== id);
-    setProfiles(updatedUsers);
+    setLoading(true);
+
+    try {
+      await api.delete(`/profile/${id}`);
+      const updatedProfiles = profiles.filter(profile => profile.id !== id);
+      setProfiles(updatedProfiles);
+    } catch {
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleAddUser = () => {

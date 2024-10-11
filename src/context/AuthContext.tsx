@@ -31,6 +31,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         setUser(JSON.parse(storedUser));
         setToken(storedToken);
     } else {
+        setUser(null);
+        setToken(undefined);
         router.push('/login');
     }
   }, [router]);

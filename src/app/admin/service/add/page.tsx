@@ -1,40 +1,41 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Button from '@/components/Button';
 import Input from '@/components/Input';
+import { z } from 'zod';
+import { ServiceSchema } from '@/helpers/validations';
+import { useForm } from '@/hooks/useForm';
+import { CreateService } from '@/@types/service';
+import api from '@/services/api';
+import { Controller } from 'react-hook-form';
+
+type ServiceFormData = z.infer<typeof ServiceSchema>;
 
 export default function AddService() {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  const handleSubmit = async (e: any) => {
-    e.preventDefault();
+  const {
+    control,
+    handleSubmit,
+    formState: { errors }
+  } = useForm(ServiceSchema)
+
+  const onSubmit = async (data: ServiceFormData) => {
     setLoading(true);
 
     try {
-      // Aqui você faria uma chamada à API para adicionar o usuário
-      // Exemplo:
-      // await fetch('/api/users', {
-      //   method: 'POST',
-      //   body: JSON.stringify({ name, email }),
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      // });
+      const serviceObj: CreateService = {
+        descricao: data.description,
+        preco: Number(data.price)
+      }
 
-      // Simulando um atraso
-      await new Promise(resolve => setTimeout(resolve, 1000));
-
-      // Redirecionar para a lista de usuários após o sucesso
-      router.push('/admin/user');
+      await api.post("/service", serviceObj);
+      router.push('/admin/service');
     } catch (error) {
-      console.error('Erro ao adicionar usuário:', error);
-      // Aqui você poderia exibir uma mensagem de erro para o usuário
+      console.error('Erro ao adicionar serviço:', error);
     } finally {
       setLoading(false);
     }
@@ -44,22 +45,36 @@ export default function AddService() {
     <div className="flex h-screen">
       <div className="flex-1 p-4 bg-gray-100">
         <h1 className="text-2xl font-bold mb-4 text-primary">Cadastrar Serviço</h1>
-        <div onSubmit={handleSubmit} className="bg-white p-6 rounded shadow-md">
-          <Input
-            name='nome'
-            label='Nome'
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            variant='secondary'
+        <div className="bg-white p-6 rounded shadow-md">
+          <Controller
+            control={control}
+            name='description'
+            render={({ field: { value, onChange }}) => (
+              <Input
+                name='description'
+                label='Descrição'
+                type="text"
+                variant='secondary'
+                value={value}
+                onChange={onChange}
+                errorMessage={errors.description?.message}
+              />
+            )}
           />
-          <Input
-            name='email'
-            label='Email'
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            variant='secondary'
+          <Controller
+            control={control}
+            name='price'
+            render={({ field: { value, onChange }}) => (
+              <Input
+                name='price'
+                label='Preço'
+                type="text"
+                variant='secondary'
+                value={value}
+                onChange={onChange}
+                errorMessage={errors.price?.message}
+              />
+            )}
           />
           <div className='flex justify-end gap-4'>
             <Button
@@ -69,7 +84,7 @@ export default function AddService() {
               Cancelar
             </Button>
             <Button
-              onClick={() => {}}
+              onClick={handleSubmit(onSubmit)}
               variant='primary'
             >
               {loading ? 'Cadastrando...' : 'Adicionar Serviço'}

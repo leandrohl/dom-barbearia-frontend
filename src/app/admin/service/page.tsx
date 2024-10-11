@@ -9,15 +9,10 @@ import {
 } from '@heroicons/react/24/outline'
 import Button from '@/components/Button';
 import api from '@/services/api';
-
-interface Service {
-  id: number;
-  descricao: string;
-  preco: number;
-}
+import { IService } from '@/@types/service';
 
 export default function Service() {
-  const [services, setServices] = useState<Service[]>([]);
+  const [services, setServices] = useState<IService[]>([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
@@ -39,8 +34,16 @@ export default function Service() {
   }, []);
 
   const handleDelete = async (id: number) => {
-    const updatedUsers = services.filter(user => user.id !== id);
-    setServices(updatedUsers);
+    setLoading(true);
+
+    try {
+      await api.delete(`/service/${id}`);
+      const updatedServices = services.filter(service => service.id !== id);
+      setServices(updatedServices);
+    } catch {
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleAddUser = () => {

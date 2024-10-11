@@ -9,19 +9,10 @@ import {
 } from '@heroicons/react/24/outline'
 import Button from '@/components/Button';
 import api from '@/services/api';
-
-interface Employee {
-  id: number;
-  nome: string;
-  email: string;
-  telefone: string;
-  cpf: string;
-  dataContratacao: string;
-  ativo: string;
-}
+import { IEmployee } from '@/@types/employee';
 
 export default function Employee() {
-  const [employees, setEmployees] = useState<Employee[]>([]);
+  const [employees, setEmployees] = useState<IEmployee[]>([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
@@ -43,9 +34,18 @@ export default function Employee() {
   }, []);
 
   const handleDelete = async (id: number) => {
-    const updatedUsers = employees.filter(user => user.id !== id);
-    setEmployees(updatedUsers);
+    setLoading(true);
+
+    try {
+      await api.delete(`/employees/${id}`);
+      const updatedEmployee = employees.filter(employee => employee.id !== id);
+      setEmployees(updatedEmployee);
+    } catch {
+    } finally {
+      setLoading(false);
+    }
   };
+
 
   const handleAddUser = () => {
     router.push('/admin/employee/add');

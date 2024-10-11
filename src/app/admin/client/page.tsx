@@ -9,23 +9,10 @@ import {
 } from '@heroicons/react/24/outline'
 import Button from '@/components/Button';
 import api from '@/services/api';
-
-export interface Client {
-  id: number;
-  nome: string;
-  email: string;
-  telefone: string;
-  dataAniversario: string;
-  cpf: string;
-  endereco: string;
-  bairro: string;
-  cidade: string;
-  profissao: string;
-  observacao: string;
-}
+import { IClient } from '@/@types/client';
 
 export default function Client() {
-  const [customers, setCustomers] = useState<Client[]>([]);
+  const [customers, setCustomers] = useState<IClient[]>([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
@@ -47,16 +34,24 @@ export default function Client() {
   }, []);
 
   const handleDelete = async (id: number) => {
-    const updatedUsers = customers.filter(user => user.id !== id);
-    setCustomers(updatedUsers);
+    setLoading(true);
+
+    try {
+      await api.delete(`/client/${id}`);
+      const updatedCustomers = customers.filter(client => client.id !== id);
+      setCustomers(updatedCustomers);
+    } catch {
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleAddUser = () => {
-    router.push('/admin/user/add');
+    router.push('/admin/client/add');
   };
 
   const handleEdit = (id: number) => {
-    router.push(`/admin/user/edit/${id}`);
+    router.push(`/admin/client/edit/${id}`);
   };
 
   return (

@@ -10,6 +10,7 @@ import {
 import Button from '@/components/Button';
 import api from '@/services/api';
 import { IUser } from '@/@types/user'
+import { IProfile } from '@/@types/profile';
 
 export default function User() {
   const [users, setUsers] = useState<IUser[]>([]);
@@ -20,8 +21,15 @@ export default function User() {
     setLoading(true);
 
     try {
-      const data = await api.get("/users");
-      setUsers(data);
+      const users = await api.get("/users");
+      const profiles = await api.get("/profile");
+
+      const usersWithProfiles = users.map((user: IUser) => ({
+        ...user,
+        perfil: profiles.find((profile: IProfile) => profile.id === Number(user.perfil))?.nome
+      }));
+
+      setUsers(usersWithProfiles);
     } catch {
     } finally {
       setLoading(false);
@@ -79,7 +87,8 @@ export default function User() {
                 <td className="border border-gray-300 p-2">{user.id}</td>
                 <td className="border border-gray-300 p-2">{user.nome}</td>
                 <td className="border border-gray-300 p-2">{user.email}</td>
-                <td className="border border-gray-300 p-2">{user.perfil}</td>
+                <td className="border border-gray-300 p-2">{user.perfil}
+                </td>
                 <td className="border border-gray-300 p-2 w-32">
                   <button
                     onClick={() => handleEdit(user.id)}

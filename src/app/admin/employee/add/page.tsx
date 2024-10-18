@@ -35,7 +35,7 @@ export default function AddEmployee() {
         cpf: data.cpf,
         dataContratacao: data.hiringDate,
         telefone: data.phone,
-        ativo: data.active
+        ativo: !!data.active
       }
 
       await api.post("/employees", employeeObj);
@@ -120,7 +120,7 @@ export default function AddEmployee() {
                 <Input
                   name='hiringDate'
                   label='Data de contratação'
-                  type="text"
+                  type="date"
                   variant='secondary'
                   value={value}
                   onChange={onChange}
@@ -133,7 +133,7 @@ export default function AddEmployee() {
               name='active'
               render={({ field: { value, onChange }}) => (
                 <Checkbox
-                  checked={value}
+                  checked={value || false}
                   label='Ativo?'
                   name='active'
                   onChange={onChange}

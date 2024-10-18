@@ -1,14 +1,16 @@
+import { SelectOption } from '@/@types/utils';
 import React from 'react';
 
 interface SelectProps {
   name: string;
   label: string;
-  value: string;
+  value: string | string[];
   onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-  options: { value: number; label: string }[];
+  options: SelectOption[];
   className?: string;
   variant?: "primary" | "secondary";
   errorMessage?: string;
+  multiple?: boolean;
 }
 
 const Select = ({
@@ -24,12 +26,13 @@ const Select = ({
   let classNameSelect = "p-2 mt-1 block w-full h-9 rounded-md shadow-sm bg-gray-700 text-gray-200";
 
   if (variant === "secondary") {
-    classNameSelect = "border border-gray-300 p-2 w-full rounded text-primary";
+    classNameSelect = "border border-gray-300 h-9 p-2 w-full rounded text-primary ";
   }
 
   if (errorMessage) {
-    classNameSelect += "border border-red-500 text-primary";
+    classNameSelect += "border border-red-500 text-primary ";
   }
+
 
   return (
     <div className={`mb-4 ${className}`}>
@@ -47,7 +50,7 @@ const Select = ({
         <option value="" disabled>
           Selecione uma opção
         </option>
-        {options.map((option: { value: number; label: string }) => (
+        {options.map((option: SelectOption) => (
           <option key={option.value} value={option.value}>
             {option.label}
           </option>

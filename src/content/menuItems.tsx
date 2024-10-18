@@ -6,7 +6,8 @@ import {
   IdentificationIcon,
   ScissorsIcon,
   WrenchScrewdriverIcon,
-  ShoppingBagIcon
+  ShoppingBagIcon,
+  ClipboardIcon
 } from '@heroicons/react/24/outline'
 
 const menuItems = [
@@ -14,6 +15,11 @@ const menuItems = [
     title: 'Home',
     icon: <HomeIcon className="w-6 h-6" />,
     link: '/admin',
+  },
+  {
+    title: 'Comanda',
+    icon: <ClipboardIcon className="w-6 h-6" />,
+    link: '/admin/command',
   },
   {
     title: 'Usuário',

@@ -118,6 +118,21 @@ export default function AddClient() {
             />
             <Controller
               control={control}
+              name='birthdayDate'
+              render={({ field: { value, onChange }}) => (
+                <Input
+                  name='birthdayDate'
+                  label='Data de aniversário'
+                  type="date"
+                  variant='secondary'
+                  value={value}
+                  onChange={onChange}
+                  errorMessage={errors.birthdayDate?.message}
+                />
+              )}
+            />
+            <Controller
+              control={control}
               name='address'
               render={({ field: { value, onChange }}) => (
                 <Input
@@ -176,22 +191,22 @@ export default function AddClient() {
                 />
               )}
             />
+            <Controller
+              control={control}
+              name='observation'
+              render={({ field: { value, onChange }}) => (
+                <Input
+                  name='observation'
+                  label='Observação'
+                  type="text"
+                  variant='secondary'
+                  value={value || ""}
+                  onChange={onChange}
+                  errorMessage={errors.observation?.message}
+                />
+              )}
+            />
           </div>
-          <Controller
-            control={control}
-            name='observation'
-            render={({ field: { value, onChange }}) => (
-              <Input
-                name='observation'
-                label='Observação'
-                type="text"
-                variant='secondary'
-                value={value || ""}
-                onChange={onChange}
-                errorMessage={errors.observation?.message}
-              />
-            )}
-          />
           <div className='flex justify-end gap-4'>
             <Button
                onClick={() => router.back()}

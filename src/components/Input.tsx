@@ -16,7 +16,7 @@ const Input = ({ name, label, onChange, value, className = '', type = 'text', va
   let classNameInput = "p-2 mt-1 block w-full h-9 rounded-md shadow-sm bg-gray-700 text-gray-200";
 
   if (variant === "secondary") {
-    classNameInput = "border border-gray-300 p-2 w-full rounded text-primary";
+    classNameInput = "border h-9 border-gray-300 p-2 w-full rounded text-primary";
   }
 
   if (errorMessage) {

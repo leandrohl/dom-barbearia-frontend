@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Button from '@/components/Button';
 import Input from '@/components/Input';
@@ -10,10 +10,14 @@ import { useForm } from '@/hooks/useForm';
 import { CreateService } from '@/@types/service';
 import api from '@/services/api';
 import { Controller } from 'react-hook-form';
+import { IEmployee } from '@/@types/employee';
+import Select from '@/components/Select';
+import MultiSelect from '@/components/MultiSelect';
 
 type ServiceFormData = z.infer<typeof ServiceSchema>;
 
 export default function AddService() {
+  const [employees, setEmployees] = useState<IEmployee[]>([]);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
@@ -23,13 +27,30 @@ export default function AddService() {
     formState: { errors }
   } = useForm(ServiceSchema)
 
+  const fetchEmployees = async () => {
+    setLoading(true);
+
+    try {
+      const data = await api.get("/employees");
+      setEmployees(data);
+    } catch {
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    fetchEmployees();
+  }, []);
+
   const onSubmit = async (data: ServiceFormData) => {
     setLoading(true);
 
     try {
       const serviceObj: CreateService = {
         descricao: data.description,
-        preco: Number(data.price)
+        preco: Number(data.price),
+        funcionarios: data.employees.map(employee => employee.value)
       }
 
       await api.post("/service", serviceObj);
@@ -74,6 +95,23 @@ export default function AddService() {
                 onChange={onChange}
                 errorMessage={errors.price?.message}
               />
+            )}
+          />
+          <Controller
+            control={control}
+            name='employees'
+            render={({ field: { value, onChange }}) => (
+              <MultiSelect
+                name="employees"
+                label="Funcionários"
+                options={employees.map(employee => ({
+                  label: employee.nome,
+                  value: employee.id
+                }))}
+                onChange={onChange}
+                value={value}
+                errorMessage={errors.employees?.message}
+             />
             )}
           />
           <div className='flex justify-end gap-4'>

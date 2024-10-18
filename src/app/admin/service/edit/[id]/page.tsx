@@ -9,14 +9,17 @@ import { z } from 'zod';
 import { ServiceSchema } from '@/helpers/validations';
 import { useForm } from '@/hooks/useForm';
 import api from '@/services/api';
-import { CreateService } from '@/@types/service';
+import { CreateService, ServiceEmployee } from '@/@types/service';
 import { Controller } from 'react-hook-form';
+import MultiSelect from '@/components/MultiSelect';
+import { IEmployee } from '@/@types/employee';
 
 type ServiceFormData = z.infer<typeof ServiceSchema>;
 
 export default function EditService(
   { params: {id}} : { params: {id: number } }
 ) {
+  const [employees, setEmployees] = useState<IEmployee[]>([]);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
@@ -25,7 +28,23 @@ export default function EditService(
     handleSubmit,
     setValue,
     formState: { errors }
-  } = useForm(ServiceSchema)
+  } = useForm(ServiceSchema);
+
+  const fetchEmployees = async () => {
+    setLoading(true);
+
+    try {
+      const data = await api.get("/employees");
+      setEmployees(data);
+    } catch {
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    fetchEmployees();
+  }, []);
 
   const searchServiceById = async () => {
     setLoading(true);
@@ -34,6 +53,13 @@ export default function EditService(
       const data = await api.get(`/service/${id}`);
       setValue("description", data.descricao);
       setValue("price", String(data.preco));
+
+      const employees = data.servicoFuncionario.map(( sf: ServiceEmployee ) => sf.funcionario) as IEmployee[];
+
+      setValue("employees", employees.map(e => ({
+        label: e.nome,
+        value: e.id
+      })))
     } catch {
     } finally {
       setLoading(false);
@@ -50,7 +76,8 @@ export default function EditService(
     try {
       const serviceObj: CreateService = {
         descricao: data.description,
-        preco: Number(data.price)
+        preco: Number(data.price),
+        funcionarios: data.employees.map(employee => employee.value)
       }
 
       await api.put(`/service/${id}`, serviceObj);
@@ -95,6 +122,23 @@ export default function EditService(
                 onChange={onChange}
                 errorMessage={errors.price?.message}
               />
+            )}
+          />
+          <Controller
+            control={control}
+            name='employees'
+            render={({ field: { value, onChange }}) => (
+              <MultiSelect
+                name="employees"
+                label="Funcionários"
+                options={employees.map(employee => ({
+                  label: employee.nome,
+                  value: employee.id
+                }))}
+                onChange={onChange}
+                value={value}
+                errorMessage={errors.employees?.message}
+             />
             )}
           />
           <div className='flex justify-end gap-4'>

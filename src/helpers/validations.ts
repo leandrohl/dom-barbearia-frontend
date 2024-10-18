@@ -33,6 +33,10 @@ export const ClientSchema = z.object({
 export const ServiceSchema = z.object({
   description: z.string({ message: "Campo obrigatório" }),
   price: z.string({ message: "Campo obrigatório" }),
+  employees: z.array(z.object({
+    label: z.string(),
+    value: z.number()
+  }), { message: "Selecione pelo menos um funcionário" }).min(1)
 });
 
 export const ProductSchema = z.object({
@@ -47,5 +51,19 @@ export const EmployeeSchema = z.object({
   phone: z.string({ message: "Campo obrigatório" }),
   hiringDate: z.string({ message: "Campo obrigatório" }),
   cpf: z.string({ message: "Campo obrigatório" }),
-  active: z.boolean({ message: "Campo obrigatório" })
+  active: z.boolean().optional()
+});
+
+const OrderItemSchema = z.object({
+  type: z.string({ message: "Campo obrigatório" }),
+  product: z.string().optional(),
+  service: z.string().optional(),
+  employee: z.string().optional(),
+  value: z.string({ message: "Campo obrigatório" }),
+  amount: z.number({ message: "Campo obrigatório" }),
+});
+
+export const CommandSchema = z.object({
+  client: z.string({ message: "Campo obrigatório" }),
+  items: z.array(OrderItemSchema).min(1, { message: "Pelo menos um item é obrigatório" }),
 });

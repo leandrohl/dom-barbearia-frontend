@@ -12,4 +12,13 @@ export interface IClient {
   observacao?: string;
 }
 
+export interface IClientWithStatistics {
+  id: number;
+  nome: string;
+  classificacao: string;
+  frequenciaVisitas: number;
+  valorGastoTotal: number;
+  ultimaVisita: string;
+}
+
 export type CreateClient = Omit<IClient, 'id'>;

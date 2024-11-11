@@ -18,3 +18,17 @@ export interface CreateEmployee {
   dataContratacao: string;
   ativo: boolean;
 }
+
+export interface IEmployeeWithStatistics {
+  id: number;
+  nome: string;
+  faturamentoTotal: number;
+  clientesNovos: number;
+  totalComandas: number;
+  classificacaoDosClientes: {
+    Excelente: number,
+    Otimo: number,
+    Regular: number,
+    Ruim: number,
+  }
+}

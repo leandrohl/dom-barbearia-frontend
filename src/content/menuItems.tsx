@@ -7,7 +7,8 @@ import {
   ScissorsIcon,
   WrenchScrewdriverIcon,
   ShoppingBagIcon,
-  ClipboardIcon
+  ClipboardIcon,
+  ChartBarIcon
 } from '@heroicons/react/24/outline'
 
 const menuItems = [
@@ -50,6 +51,21 @@ const menuItems = [
     title: 'Produto',
     icon: <ShoppingBagIcon className="w-6 h-6" />,
     link: '/admin/product',
+  },
+  {
+    title: 'Relatórios',
+    icon: <ChartBarIcon className="w-6 h-6" />,
+    link: '',
+    items: [
+      {
+        title: 'Classificação de Clientes',
+        link: '/admin/reports/client-classification',
+      },
+      {
+        title: 'Produção de barbeiros',
+        link: '/admin/reports/barber-production',
+      }
+    ]
   },
 ];
 

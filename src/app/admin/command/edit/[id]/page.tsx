@@ -17,11 +17,13 @@ import Input from '@/components/Input';
 import {
   TrashIcon
 } from '@heroicons/react/24/outline'
-import { CreateCommand } from '@/@types/command';
+import { CreateCommand, OrderItemResponse } from '@/@types/command';
 
 type CommandFormData = z.infer<typeof CommandSchema>;
 
-export default function AddCommand() {
+export default function EditCommand(
+  { params: {id}} : { params: {id: number }}
+) {
   const [customers, setCustomers] = useState<IClient[]>([]);
   const [services, setServices] = useState<IService[]>([]);
   const [products, setProducts] = useState<IProduct[]>([]);
@@ -47,6 +49,27 @@ export default function AddCommand() {
     name: 'items',
   });
 
+  console.log(errors)
+
+  const searchCommandById = async () => {
+    setLoading(true);
+
+    try {
+      const data = await api.get(`/command/${id}`);
+      setValue("client", String(data.cliente.id));
+      setValue("items", data.items.map((item: OrderItemResponse) => ({
+        type: item.tipo,
+        product: String(item.produto?.id),
+        service: String(item.servico?.id),
+        employee: String(item.funcionario?.id),
+        value: String(item.valor),
+        amount: String(item.quantidade)
+      })));
+    } catch {
+    } finally {
+      setLoading(false);
+    }
+  }
   const fetchCustomers = async () => {
     setLoading(true);
 
@@ -83,10 +106,15 @@ export default function AddCommand() {
     }
   }
 
+  const handleFetch = async () => {
+    await fetchCustomers();
+    await fetchProducts();
+    await fetchServices();
+    await searchCommandById();
+  }
+
   useEffect(() => {
-    fetchCustomers();
-    fetchProducts();
-    fetchServices();
+    handleFetch()
   }, []);
 
   const onSubmit = async (data: CommandFormData) => {
@@ -106,7 +134,7 @@ export default function AddCommand() {
       }
 
 
-      await api.post("/command", commandObj);
+      await api.put(`/command/${id}`, commandObj);
       router.push('/admin/command');
     } catch (error) {
       console.error('Erro ao adicionar perfil:', error);
@@ -118,7 +146,7 @@ export default function AddCommand() {
   return (
     <div className="flex h-screen">
       <div className="flex-1 p-4 bg-gray-100">
-        <h1 className="text-2xl font-bold mb-4 text-primary">Cadastrar Comanda</h1>
+        <h1 className="text-2xl font-bold mb-4 text-primary">Editar Comanda</h1>
         <div className="bg-white p-6 rounded shadow-md">
           <Controller
             control={control}
@@ -290,7 +318,7 @@ export default function AddCommand() {
               onClick={handleSubmit(onSubmit)}
               variant='primary'
             >
-              {loading ? 'Cadastrando...' : 'Criar Comanda'}
+              {loading ? 'Editando...' : 'Editar Comanda'}
             </Button>
           </div>
         </div>

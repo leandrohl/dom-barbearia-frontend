@@ -60,7 +60,7 @@ const OrderItemSchema = z.object({
   service: z.string().optional(),
   employee: z.string().optional(),
   value: z.string({ message: "Campo obrigatório" }),
-  amount: z.number({ message: "Campo obrigatório" }),
+  amount: z.string().optional(),
 });
 
 export const CommandSchema = z.object({

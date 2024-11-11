@@ -33,18 +33,18 @@ export default function Product() {
     console.log(loading);
   }, []);
 
-  const handleDelete = async (id: number) => {
-    setLoading(true);
+  // const handleDelete = async (id: number) => {
+  //   setLoading(true);
 
-    try {
-      await api.delete(`/product/${id}`);
-      const updatedProducts = products.filter(product => product.id !== id);
-      setProducts(updatedProducts);
-    } catch {
-    } finally {
-      setLoading(false);
-    }
-  };
+  //   try {
+  //     await api.delete(`/product/${id}`);
+  //     const updatedProducts = products.filter(product => product.id !== id);
+  //     setProducts(updatedProducts);
+  //   } catch {
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   const handleAddProduct = () => {
     router.push('/admin/product/add');
@@ -88,12 +88,12 @@ export default function Product() {
                   >
                     <PencilIcon className="w-6 h-6" />
                   </button>
-                  <button
+                  {/* <button
                     onClick={() => handleDelete(product.id)}
                     className="p-1 bg-primary text-white rounded"
                   >
                     <TrashIcon className="w-6 h-6" />
-                  </button>
+                  </button> */}
                 </td>
               </tr>
             ))}

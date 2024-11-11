@@ -1,10 +1,107 @@
+"use client";
 
+import Button from '@/components/Button';
+import Input from '@/components/Input';
+import PieChart from '@/components/Chart';
+import { useEffect, useState } from 'react';
+import { IEmployee } from '@/@types/employee';
+import api from '@/services/api';
+import Select from '@/components/Select';
 
 export default function HomeAdmin() {
+  const [data, setData] = useState(null);
+  const [employeeSelected, setEmployeeSelected] = useState('');
+  const [startDate, setStartDate] = useState('');
+  const [finalDate, setFinalDate] = useState('');
+  const [employees, setEmployees] = useState<IEmployee[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const fetchEmployees = async () => {
+    setLoading(true);
+
+    try {
+      const data = await api.get("/employees");
+      setEmployees(data);
+    } catch {
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  const filterEmployees = async (employeeId?: string) => {
+    setLoading(true);
+    try {
+      const data = await api.get(`/command/statistics?startDate=${startDate}&endDate=${finalDate}&employeeId=${employeeId}`);
+      setData(data);
+    } catch {
+      // Handle error
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchEmployees();
+    filterEmployees();
+  }, []);
 
   return (
-      <div>
-          <h1 className="text-primary">Bem vindo à área administrativa</h1>
-      </div>
-  )
+    <div className="grid grid-rows-[auto_1fr_auto] min-h-screen p-8 pb-20">
+      <header className="w-full">
+        <h1 className="text-2xl font-bold mb-10 text-primary">Relatório Geral</h1>
+      </header>
+
+      <main className="flex flex-col w-full">
+        <div className="flex gap-4 mb-4">
+          <Select
+            name='employee'
+            label='Funcionário'
+            variant='secondary'
+            value={employeeSelected}
+            onChange={(e) => {
+              setEmployeeSelected(e.target.value)
+              filterEmployees(e.target.value)
+            }}
+            options={employees.map(employee => ({
+              value: employee.id,
+              label: employee.nome
+            }))}
+            className='w-2/4'
+          />
+          <Input
+            name='startDate'
+            type="date"
+            label="Data inicial"
+            value={startDate}
+            onChange={(e) => setStartDate(e.target.value)}
+            variant='secondary'
+            className='w-1/4'
+          />
+          <Input
+            name='finalDate'
+            type="date"
+            label="Data final"
+            value={finalDate}
+            onChange={(e) => setFinalDate(e.target.value)}
+            variant='secondary'
+            className='w-1/4'
+          />
+          <div className='flex items-center'>
+            <Button
+              variant='primary'
+              onClick={() => {}}
+            >
+              Filtrar
+            </Button>
+          </div>
+        </div>
+
+        <section className="w-full grid grid-cols-1 sm:grid-cols-2 gap-8">
+          <PieChart title='Classificação de Clientes'/>
+          <PieChart title='Retorno de Clientes'/>
+          <PieChart title='Distribuição de Faturamento'/>
+        </section>
+      </main>
+    </div>
+  );
 }

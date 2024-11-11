@@ -33,18 +33,18 @@ export default function Service() {
     console.log(loading);
   }, []);
 
-  const handleDelete = async (id: number) => {
-    setLoading(true);
+  // const handleDelete = async (id: number) => {
+  //   setLoading(true);
 
-    try {
-      await api.delete(`/service/${id}`);
-      const updatedServices = services.filter(service => service.id !== id);
-      setServices(updatedServices);
-    } catch {
-    } finally {
-      setLoading(false);
-    }
-  };
+  //   try {
+  //     await api.delete(`/service/${id}`);
+  //     const updatedServices = services.filter(service => service.id !== id);
+  //     setServices(updatedServices);
+  //   } catch {
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   const handleAddUser = () => {
     router.push('/admin/service/add');
@@ -86,12 +86,12 @@ export default function Service() {
                   >
                     <PencilIcon className="w-6 h-6" />
                   </button>
-                  <button
+                  {/* <button
                     onClick={() => handleDelete(service.id)}
                     className="p-1 bg-primary text-white rounded"
                   >
                     <TrashIcon className="w-6 h-6" />
-                  </button>
+                  </button> */}
                 </td>
               </tr>
             ))}

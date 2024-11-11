@@ -1,18 +1,82 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
 import Link from 'next/link';
 import React, { useState } from 'react';
-import { ArrowRightStartOnRectangleIcon, ChevronLeftIcon } from '@heroicons/react/24/outline'
+import { ArrowRightStartOnRectangleIcon, ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline'
 import menuItems from '@/content/menuItems';
 import { useAuth } from '@/context/AuthContext';
+import { useRouter } from 'next/navigation';
 
 const Sidebar: React.FC = () => {
   const { user, logout } = useAuth();
 
   const [isOpen, setIsOpen] = useState(false);
+  const [openMenuIndex, setOpenMenuIndex] = useState<number | null> (null);
+  const router = useRouter();
 
   const toggleSidebar = () => {
+    if (isOpen) {
+      setOpenMenuIndex(null);
+    }
+
     setIsOpen(!isOpen);
+  };
+
+  const renderItemsMenu = () => {
+    return menuItems.map((item, index) => {
+      const isDropDown = item.items && item.items.length > 0;
+
+      const handleToggleMenu = (index: number) => {
+        setOpenMenuIndex(openMenuIndex === index ? null : index);
+      };
+
+      const handleItem = () => {
+        if (isDropDown && isOpen) {
+          handleToggleMenu(index)
+        } else {
+          router.push(item.link)
+        }
+      }
+
+      return (
+        <div key={item.title}>
+          <div
+            onClick={handleItem}
+            className="flex items-center py-2 px-4 hover:bg-gray-700 transition-colors duration-200 cursor-pointer"
+          >
+            {isOpen ? (
+              <span className='flex justify-between w-full items-center'>
+                {isDropDown
+                  ? <>
+                    {item.title}
+                    <ChevronRightIcon
+                      className={`
+                        w-5 h-5 transform transition-transform duration-300
+                        ${openMenuIndex === index ? 'rotate-90' : 'rotate-0'
+                      }`}
+                    />
+                  </>
+                  : item.title
+                }
+              </span>
+            ) : (
+              item.icon
+            )}
+          </div>
+
+          {item.items && item.items.length > 0 && openMenuIndex === index && (
+            <div className="ml-4">
+              {item.items.map(subItem => (
+                <Link key={subItem.title} href={subItem.link} className="block py-2 px-4 hover:bg-gray-600 transition-colors duration-200">
+                  {subItem.title}
+                </Link>
+              ))}
+            </div>
+          )}
+        </div>
+      );
+    });
   };
 
   return (
@@ -27,15 +91,7 @@ const Sidebar: React.FC = () => {
       </div>
       <nav className="flex flex-col py-8 justify-between h-full">
         <div className='flex flex-col'>
-          {menuItems.map(item => (
-            <Link key={item.title} href={item.link} className="flex items-center py-2 px-4 hover:bg-gray-700 transition-colors duration-200">
-              {isOpen ? (
-                <span>{item.title}</span>
-              ) : (
-                item.icon
-              )}
-            </Link>
-          ))}
+          {renderItemsMenu()}
         </div>
         <div className='flex flex-col'>
          <div onClick={logout} className="py-2 px-4 hover:bg-gray-700 transition-colors duration-200 cursor-pointer">

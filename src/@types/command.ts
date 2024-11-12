@@ -33,3 +33,21 @@ export interface OrderItemResponse {
   produto?: IProduct;
   funcionario?: IEmployee;
 }
+
+export interface ICommandWithStatistics {
+  novosRetornos: {
+    novos: number,
+    retorno: number
+},
+classificacaoDosClientes: {
+    Excelente: number,
+    Otimo: number,
+    Regular: number,
+    Ruim: number
+},
+faturamento: {
+    produtos: number,
+    servicos: number,
+    total: number
+}
+}

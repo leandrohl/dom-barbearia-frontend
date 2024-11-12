@@ -1,21 +1,26 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Pie } from 'react-chartjs-2';
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+import { Pie, Line } from 'react-chartjs-2';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend, LineElement, PointElement, CategoryScale, LinearScale } from 'chart.js';
 
-ChartJS.register(ArcElement, Tooltip, Legend);
+ChartJS.register(ArcElement, Tooltip, Legend, LineElement, PointElement, CategoryScale, LinearScale);
 
 interface IPieChart {
   title: string;
+  labels: string[],
+  data: number[],
+  colors: string[],
+  type: "Pie" | "Line"
 }
 
-export default function PieChart({ title }: IPieChart) {
-  const data = {
-    labels: ['Produtos', 'Serviços', 'Outros'],
+export default function PieChart({ title, labels, data, colors, type }: IPieChart) {
+  const dataObj = {
+    labels: labels,
     datasets: [
       {
-        data: [300, 50, 100],
-        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
-        hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
+        label: 'Faturamento',
+        data: data,
+        backgroundColor: colors,
+        hoverBackgroundColor: colors,
       },
     ],
   };
@@ -26,7 +31,7 @@ export default function PieChart({ title }: IPieChart) {
       tooltip: {
         callbacks: {
           label: function (tooltipItem: any) {
-            return `${tooltipItem.label}: R$ ${tooltipItem.raw}`;
+            return `${tooltipItem.label}: ${tooltipItem.raw}`;
           },
         },
       },
@@ -36,8 +41,17 @@ export default function PieChart({ title }: IPieChart) {
   return (
     <div className="flex flex-col items-center bg-gray-200 p-8 rounded-lg ">
       <h2 className="text-xl font-semibold mb-4 text-primary text-center">{title}</h2>
-      <div style={{ width: '300px', height: '300px' }}>
-        <Pie data={data} options={options} />
+      <div
+         style={{
+          width: type === 'Line' ? '500px' : '300px',
+          height: type === 'Line' ? '300px' : '300px',
+        }}
+      >
+      {type === 'Pie' ? (
+          <Pie data={dataObj} options={options} />
+        ) : (
+          <Line data={dataObj} options={options} />
+        )}
       </div>
     </div>
   )

@@ -7,9 +7,10 @@ import { useEffect, useState } from 'react';
 import { IEmployee } from '@/@types/employee';
 import api from '@/services/api';
 import Select from '@/components/Select';
+import { ICommandWithStatistics } from '@/@types/command';
 
 export default function HomeAdmin() {
-  const [data, setData] = useState(null);
+  const [data, setData] = useState<ICommandWithStatistics | null>();
   const [employeeSelected, setEmployeeSelected] = useState('');
   const [startDate, setStartDate] = useState('');
   const [finalDate, setFinalDate] = useState('');
@@ -91,15 +92,45 @@ export default function HomeAdmin() {
               variant='primary'
               onClick={() => {}}
             >
-              Filtrar
+              {loading ? 'Carregando...' : 'Filtrar'}
             </Button>
           </div>
         </div>
 
         <section className="w-full grid grid-cols-1 sm:grid-cols-2 gap-8">
-          <PieChart title='Classificação de Clientes'/>
-          <PieChart title='Retorno de Clientes'/>
-          <PieChart title='Distribuição de Faturamento'/>
+          <PieChart
+            title='Classificação de Clientes'
+            labels={['Excelente', "Ótimo", "Regular", "Ruim"]}
+            data={[
+              data?.classificacaoDosClientes.Excelente || 0,
+              data?.classificacaoDosClientes.Otimo || 0,
+              data?.classificacaoDosClientes.Regular || 0,
+              data?.classificacaoDosClientes.Ruim || 0,
+            ]}
+            colors={["#808080", "#4682B4", "#556B2F", "#4d2703"]}
+            type='Pie'
+          />
+          <PieChart
+            title='Retorno de Clientes'
+            labels={['Novos', "Retorno"]}
+            data={[
+              data?.novosRetornos.novos || 0,
+              data?.novosRetornos.retorno || 0,
+            ]}
+            colors={["#808080", "#4682B4"]}
+             type='Pie'
+          />
+          <PieChart
+            title='Distribuição de Faturamento'
+            labels={['Produtos', "Serviços", "Total"]}
+            data={[
+              data?.faturamento.produtos || 0,
+              data?.faturamento.servicos || 0,
+              data?.faturamento.total || 0,
+            ]}
+            colors={["#808080", "#4682B4", "#556B2F"]}
+            type='Line'
+          />
         </section>
       </main>
     </div>

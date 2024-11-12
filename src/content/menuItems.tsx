@@ -64,6 +64,10 @@ const menuItems = [
       {
         title: 'Produção de barbeiros',
         link: '/admin/reports/barber-production',
+      },
+      {
+        title: 'Relatório Diário',
+        link: '/admin/reports/daily-report',
       }
     ]
   },

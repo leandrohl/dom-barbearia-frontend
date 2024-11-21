@@ -143,8 +143,9 @@ export default function EditUser(
             <Button
               onClick={handleSubmit(onSubmit)}
               variant='primary'
+              loading={loading}
             >
-              {loading ? 'Editando...' : 'Editar Usuário'}
+              Editar Usuário
             </Button>
           </div>
         </div>

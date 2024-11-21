@@ -151,8 +151,9 @@ export default function EditService(
             <Button
               onClick={handleSubmit(onSubmit)}
               variant='primary'
+              loading={loading}
             >
-              {loading ? 'Cadastrando...' : 'Editar Serviço'}
+              Editar Serviço
             </Button>
           </div>
         </div>

@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Button from '@/components/Button';
 import api from '@/services/api';
 import Input from '@/components/Input';
 import { IEmployeeWithStatistics } from '@/@types/employee';
+import { useReactToPrint } from 'react-to-print';
 
 export default function BarberProduction() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -13,6 +14,8 @@ export default function BarberProduction() {
   const [employees, setEmployees] = useState<IEmployeeWithStatistics[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const contentRef = useRef<HTMLDivElement>(null);
+  const reactToPrintFn = useReactToPrint({ contentRef });
 
   const filterEmployees = async () => {
     setLoading(true);
@@ -36,15 +39,15 @@ export default function BarberProduction() {
 
 
   return (
-    <div className="flex h-screen">
+    <div className="flex h-screen" ref={contentRef}>
       <div className="flex-1 p-4 bg-gray-100">
         <h1 className="text-2xl font-bold mb-4 text-primary">Produção de Barbeiros</h1>
 
-        <div className="flex justify-end mb-4">
-          <Button onClick={() => {}} variant="primary">Exportar Relatório</Button>
+        <div className="flex justify-end mb-4 print:hidden">
+          <Button onClick={reactToPrintFn} variant="primary">Exportar Relatório</Button>
         </div>
 
-        <div className="flex gap-4 mb-4">
+        <div className="flex gap-4 mb-4 print:hidden">
           <Input
             name='searchName'
             type="text"
@@ -81,43 +84,44 @@ export default function BarberProduction() {
             </Button>
           </div>
         </div>
-
-        <table className="min-w-full bg-white border border-gray-300 text-primary">
-          <thead>
-            <tr>
-              <th className="border border-gray-300 p-2">ID</th>
-              <th className="border border-gray-300 p-2">Nome do Funcionário</th>
-              <th className="border border-gray-300 p-2">Quantidade de Atendimentos</th>
-              <th className="border border-gray-300 p-2">Clientes Novatos</th>
-              <th className="border border-gray-300 p-2">Clientes (Excelente)</th>
-              <th className="border border-gray-300 p-2">Clientes (Otimo)</th>
-              <th className="border border-gray-300 p-2">Clientes (Regular)</th>
-              <th className="border border-gray-300 p-2">Clientes (Ruim)</th>
-              <th className="border border-gray-300 p-2">Faturamento Total</th>
-            </tr>
-          </thead>
-          <tbody>
-            {loading ? (
+        <div ref={contentRef}>
+          <table className="min-w-full bg-white border border-gray-300 text-primary">
+            <thead>
               <tr>
-                <td colSpan={6} className="text-center p-4">Carregando...</td>
+                <th className="border border-gray-300 p-2">ID</th>
+                <th className="border border-gray-300 p-2">Nome do Funcionário</th>
+                <th className="border border-gray-300 p-2">Quantidade de Atendimentos</th>
+                <th className="border border-gray-300 p-2">Clientes Novatos</th>
+                <th className="border border-gray-300 p-2">Clientes (Excelente)</th>
+                <th className="border border-gray-300 p-2">Clientes (Otimo)</th>
+                <th className="border border-gray-300 p-2">Clientes (Regular)</th>
+                <th className="border border-gray-300 p-2">Clientes (Ruim)</th>
+                <th className="border border-gray-300 p-2">Faturamento Total</th>
               </tr>
-            ) : (
-              filteredEmployees.map(employee => (
-                <tr key={employee.id}>
-                  <td className="border border-gray-300 p-2">{employee.id}</td>
-                  <td className="border border-gray-300 p-2">{employee.nome}</td>
-                  <td className="border border-gray-300 p-2">{employee.totalComandas}</td>
-                  <td className="border border-gray-300 p-2">{employee.clientesNovos}</td>
-                  <td className="border border-gray-300 p-2">{employee.classificacaoDosClientes.Excelente}</td>
-                  <td className="border border-gray-300 p-2">{employee.classificacaoDosClientes.Otimo}</td>
-                  <td className="border border-gray-300 p-2">{employee.classificacaoDosClientes.Regular}</td>
-                  <td className="border border-gray-300 p-2">{employee.classificacaoDosClientes.Ruim}</td>
-                  <td className="border border-gray-300 p-2">{employee.faturamentoTotal}</td>
+            </thead>
+            <tbody>
+              {loading ? (
+                <tr>
+                  <td colSpan={6} className="text-center p-4">Carregando...</td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+              ) : (
+                filteredEmployees.map(employee => (
+                  <tr key={employee.id}>
+                    <td className="border border-gray-300 p-2">{employee.id}</td>
+                    <td className="border border-gray-300 p-2">{employee.nome}</td>
+                    <td className="border border-gray-300 p-2">{employee.totalComandas}</td>
+                    <td className="border border-gray-300 p-2">{employee.clientesNovos}</td>
+                    <td className="border border-gray-300 p-2">{employee.classificacaoDosClientes.Excelente}</td>
+                    <td className="border border-gray-300 p-2">{employee.classificacaoDosClientes.Otimo}</td>
+                    <td className="border border-gray-300 p-2">{employee.classificacaoDosClientes.Regular}</td>
+                    <td className="border border-gray-300 p-2">{employee.classificacaoDosClientes.Ruim}</td>
+                    <td className="border border-gray-300 p-2">{employee.faturamentoTotal}</td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

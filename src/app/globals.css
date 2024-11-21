@@ -7,11 +7,15 @@
   --foreground: #ffffff;
 }
 
+@font-face {
+  font-family: 'Geist Sans';
+  src: url('../assets/fonts/GeistVF.woff') format('woff');
+}
 
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: var(--font-geist-sans);
+  font-family: 'Geist Sans';
 }
 
 @layer utilities {

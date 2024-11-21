@@ -102,8 +102,9 @@ export default function AddProduct() {
             <Button
               onClick={handleSubmit(onSubmit)}
               variant='primary'
+              loading={loading}
             >
-              {loading ? 'Cadastrando...' : 'Adicionar Produto'}
+              Adicionar Produto
             </Button>
           </div>
         </div>

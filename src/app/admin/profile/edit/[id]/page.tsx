@@ -89,8 +89,9 @@ export default function EditProfile(
             <Button
               onClick={handleSubmit(onSubmit)}
               variant='primary'
+              loading={loading}
             >
-              {loading ? 'Cadastrando...' : 'Editar Perfil'}
+              Editar Perfil
             </Button>
           </div>
         </div>

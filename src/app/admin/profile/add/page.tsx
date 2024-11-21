@@ -71,8 +71,9 @@ export default function AddProfile() {
             <Button
               onClick={handleSubmit(onSubmit)}
               variant='primary'
+              loading={loading}
             >
-              {loading ? 'Cadastrando...' : 'Adicionar Perfil'}
+              Adicionar Perfil
             </Button>
           </div>
         </div>

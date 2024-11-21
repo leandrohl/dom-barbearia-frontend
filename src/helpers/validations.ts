@@ -67,3 +67,29 @@ export const CommandSchema = z.object({
   client: z.string({ message: "Campo obrigatório" }),
   items: z.array(OrderItemSchema).min(1, { message: "Pelo menos um item é obrigatório" }),
 });
+
+export const RecoverPasswordSchema = z.object({
+  email: z.string({ message: "Campo obrigatório" }).email('Email inválido'),
+});
+
+export const PasswordSchema = z.object({
+  password: z
+  .string({ message: "Campo obrigatório" })
+  .min(6, { message: "A senha deve ter pelo menos 6 caracteres" }),
+  confirmPassword: z
+  .string({ message: "Campo obrigatório" })
+  .min(6, { message: "A confirmação da senha deve ter pelo menos 6 caracteres" })
+}).refine(data => data.password === data.confirmPassword, {
+  message: "As senhas não coincidem",
+  path: ["confirmPassword"],
+});
+
+
+export const LoginSchema = z.object({
+  email: z
+  .string({ message: "Campo obrigatório" })
+  .email('Email inválido'),
+  password: z
+  .string({ message: "Campo obrigatório" })
+  .min(6, { message: "A senha deve ter pelo menos 6 caracteres" }),
+})

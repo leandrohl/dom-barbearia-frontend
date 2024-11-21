@@ -140,8 +140,9 @@ export default function AddUser() {
             <Button
               onClick={handleSubmit(onSubmit)}
               variant='primary'
+              loading={loading}
             >
-              {loading ? 'Cadastrando...' : 'Adicionar Usuário'}
+              Adicionar Usuário
             </Button>
           </div>
         </div>

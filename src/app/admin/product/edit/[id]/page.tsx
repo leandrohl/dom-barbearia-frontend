@@ -123,8 +123,9 @@ export default function EditProduct(
             <Button
               onClick={handleSubmit(onSubmit)}
               variant='primary'
+              loading={loading}
             >
-              {loading ? 'Cadastrando...' : 'Editar Produto'}
+              Editar Produto
             </Button>
           </div>
         </div>

@@ -143,6 +143,17 @@ export default function EditCommand(
     }
   };
 
+  const calculateTotal = () => {
+    const items = watch('items');
+
+    return items?.reduce((total, item) => {
+      const itemValue = Number(item.value) || 0;
+      const itemAmount = Number(item.amount) || 0;
+      if (item.type === "P")  return total + (itemValue * itemAmount);
+      else return total + itemValue;
+    }, 0);
+  };
+
   return (
     <div className="flex h-screen">
       <div className="flex-1 p-4 bg-gray-100">
@@ -307,6 +318,10 @@ export default function EditCommand(
               </div>
             </div>
           </div>
+          <div className="mt-4 text-lg font-bold text-right">
+            <span className='text-primary'>Total:</span>
+            <span className="ml-4 text-primary">R$ {calculateTotal()?.toFixed(2)}</span>
+          </div>
           <div className='flex justify-end gap-4 mt-8'>
             <Button
                onClick={() => router.back()}
@@ -317,8 +332,9 @@ export default function EditCommand(
             <Button
               onClick={handleSubmit(onSubmit)}
               variant='primary'
+              loading={loading}
             >
-              {loading ? 'Editando...' : 'Editar Comanda'}
+              Editar Comanda
             </Button>
           </div>
         </div>

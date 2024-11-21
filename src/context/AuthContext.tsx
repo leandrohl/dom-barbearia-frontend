@@ -30,10 +30,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     if (storedUser && storedToken) {
         setUser(JSON.parse(storedUser));
         setToken(storedToken);
-    } else {
-        setUser(null);
-        setToken(undefined);
-        router.push('/login');
     }
   }, [router]);
 

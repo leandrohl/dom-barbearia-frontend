@@ -152,8 +152,9 @@ export default function AddEmployee() {
             <Button
               onClick={handleSubmit(onSubmit)}
               variant='primary'
+              loading={loading}
             >
-              {loading ? 'Cadastrando...' : 'Adicionar Funcionário'}
+              Adicionar Funcionário
             </Button>
           </div>
         </div>

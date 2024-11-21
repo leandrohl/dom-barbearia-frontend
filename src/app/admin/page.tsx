@@ -29,10 +29,10 @@ export default function HomeAdmin() {
     }
   }
 
-  const filterEmployees = async (employeeId?: string) => {
+  const filterEmployees = async () => {
     setLoading(true);
     try {
-      const data = await api.get(`/command/statistics?startDate=${startDate}&endDate=${finalDate}&employeeId=${employeeId}`);
+      const data = await api.get(`/command/statistics?startDate=${startDate}&endDate=${finalDate}&employeeId=${employeeSelected}`);
       setData(data);
     } catch {
       // Handle error
@@ -61,7 +61,6 @@ export default function HomeAdmin() {
             value={employeeSelected}
             onChange={(e) => {
               setEmployeeSelected(e.target.value)
-              filterEmployees(e.target.value)
             }}
             options={employees.map(employee => ({
               value: employee.id,
@@ -90,7 +89,7 @@ export default function HomeAdmin() {
           <div className='flex items-center'>
             <Button
               variant='primary'
-              onClick={() => {}}
+              onClick={() =>  filterEmployees()}
             >
               {loading ? 'Carregando...' : 'Filtrar'}
             </Button>

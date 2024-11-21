@@ -124,8 +124,9 @@ export default function AddService() {
             <Button
               onClick={handleSubmit(onSubmit)}
               variant='primary'
+              loading={loading}
             >
-              {loading ? 'Cadastrando...' : 'Adicionar Serviço'}
+              Adicionar Serviço
             </Button>
           </div>
         </div>

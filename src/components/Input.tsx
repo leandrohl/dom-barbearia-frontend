@@ -9,18 +9,23 @@ interface InputProps {
   className?: string;
   variant?: "primary" | "secondary",
   errorMessage?: string;
+  disabled?: boolean;
 }
 
 
-const Input = ({ name, label, onChange, value, className = '', type = 'text', variant="primary", errorMessage }: InputProps) => {
-  let classNameInput = "p-2 mt-1 block w-full h-9 rounded-md shadow-sm bg-gray-700 text-gray-200";
+const Input = ({ name, label, onChange, value, className = '', type = 'text', variant="primary", errorMessage, disabled = false }: InputProps) => {
+  let classNameInput = "p-2 mt-1 block w-full h-9 rounded-md shadow-sm bg-gray-700 text-gray-200 ";
 
   if (variant === "secondary") {
-    classNameInput = "border h-9 border-gray-300 p-2 w-full rounded text-primary";
+    classNameInput = "border h-9 border-gray-300 p-2 w-full rounded text-primary ";
   }
 
   if (errorMessage) {
-    classNameInput += "border border-red-500 text-primary";
+    classNameInput += "text-primary border border-red-500 ";
+  }
+
+  if (disabled) {
+    classNameInput += "cursor-not-allowed opacity-35";
   }
 
   return (
@@ -36,6 +41,7 @@ const Input = ({ name, label, onChange, value, className = '', type = 'text', va
         value={value}
         type={type}
         className={classNameInput}
+        disabled={disabled}
       />
       {errorMessage && (
         <span className='text-red-500 text-sm mt-1'>{errorMessage}</span>

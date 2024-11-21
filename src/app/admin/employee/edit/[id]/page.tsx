@@ -176,8 +176,9 @@ export default function EditEmployee(
             <Button
               onClick={handleSubmit(onSubmit)}
               variant='primary'
+              loading={loading}
             >
-              {loading ? 'Cadastrando...' : 'Editar Funcionário'}
+              Editar Funcionário
             </Button>
           </div>
         </div>

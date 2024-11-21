@@ -10,6 +10,7 @@ import {
 import Button from '@/components/Button';
 import api from '@/services/api';
 import { IClient } from '@/@types/client';
+import MaskService from '@/helpers/masks';
 
 export default function Client() {
   const [customers, setCustomers] = useState<IClient[]>([]);
@@ -87,9 +88,9 @@ export default function Client() {
                 <td className="border border-gray-300 p-2">{client.id}</td>
                 <td className="border border-gray-300 p-2">{client.nome}</td>
                 <td className="border border-gray-300 p-2">{client.email}</td>
-                <td className="border border-gray-300 p-2">{client.telefone}</td>
-                <td className="border border-gray-300 p-2">{client.dataAniversario}</td>
-                <td className="border border-gray-300 p-2">{client.cpf}</td>
+                <td className="border border-gray-300 p-2">{MaskService.maskPhone(client.telefone)}</td>
+                <td className="border border-gray-300 p-2">{MaskService.maskDate(client.dataAniversario)}</td>
+                <td className="border border-gray-300 p-2">{MaskService.maskCPF(client.cpf)}</td>
                 <td className="border border-gray-300 p-2">{client.endereco}</td>
                 <td className="border border-gray-300 p-2">{client.bairro}</td>
                 <td className="border border-gray-300 p-2">{client.cidade}</td>

@@ -5,11 +5,11 @@ import { useRouter } from 'next/navigation';
 
 import {
   PencilIcon,
-  TrashIcon
 } from '@heroicons/react/24/outline'
 import Button from '@/components/Button';
 import api from '@/services/api';
 import { IProduct } from '@/@types/product';
+import MaskService from '@/helpers/masks';
 
 export default function Product() {
   const [products, setProducts] = useState<IProduct[]>([]);
@@ -79,7 +79,7 @@ export default function Product() {
               <tr key={product.id}>
                 <td className="border border-gray-300 p-2">{product.id}</td>
                 <td className="border border-gray-300 p-2">{product.descricao}</td>
-                <td className="border border-gray-300 p-2">{product.preco}</td>
+                <td className="border border-gray-300 p-2">{MaskService.maskMoney(product.preco)}</td>
                 <td className="border border-gray-300 p-2">{product.quantidade}</td>
                 <td className="border border-gray-300 p-2 w-32">
                   <button

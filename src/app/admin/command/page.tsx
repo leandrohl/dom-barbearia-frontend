@@ -11,6 +11,7 @@ import Button from '@/components/Button';
 import api from '@/services/api';
 import { ICommand } from '@/@types/command';
 import Modal from '@/components/Modal';
+import MaskService from '@/helpers/masks';
 
 export default function Command() {
   const [commands, setCommands] = useState<ICommand[]>([]);
@@ -87,8 +88,8 @@ export default function Command() {
               <tr key={command.id}>
                 <td className="border border-gray-300 p-2">{command.id}</td>
                 <td className="border border-gray-300 p-2">{command.cliente.nome}</td>
-                <td className="border border-gray-300 p-2">{command.cliente.cpf}</td>
-                <td className="border border-gray-300 p-2">{command.dataLancamento}</td>
+                <td className="border border-gray-300 p-2">{MaskService.maskCPF(command.cliente.cpf)}</td>
+                <td className="border border-gray-300 p-2">{MaskService.maskDate(command.dataLancamento)}</td>
                 <td className="border border-gray-300 p-2 w-32">
                   <button
                     onClick={() => searchCommandById(command.id)}

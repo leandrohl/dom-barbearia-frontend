@@ -5,11 +5,11 @@ import { useRouter } from 'next/navigation';
 
 import {
   PencilIcon,
-  TrashIcon
 } from '@heroicons/react/24/outline'
 import Button from '@/components/Button';
 import api from '@/services/api';
 import { IService } from '@/@types/service';
+import MaskService from '@/helpers/masks';
 
 export default function Service() {
   const [services, setServices] = useState<IService[]>([]);
@@ -78,7 +78,7 @@ export default function Service() {
               <tr key={service.id}>
                 <td className="border border-gray-300 p-2">{service.id}</td>
                 <td className="border border-gray-300 p-2">{service.descricao}</td>
-                <td className="border border-gray-300 p-2">{service.preco}</td>
+                <td className="border border-gray-300 p-2">{MaskService.maskMoney(service.preco)}</td>
                 <td className="border border-gray-300 p-2 w-32">
                   <button
                     onClick={() => handleEdit(service.id)}

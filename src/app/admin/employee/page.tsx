@@ -10,6 +10,7 @@ import {
 import Button from '@/components/Button';
 import api from '@/services/api';
 import { IEmployee } from '@/@types/employee';
+import MaskService from '@/helpers/masks';
 
 export default function Employee() {
   const [employees, setEmployees] = useState<IEmployee[]>([]);
@@ -83,11 +84,11 @@ export default function Employee() {
               <tr key={employee.id}>
                 <td className="border border-gray-300 p-2">{employee.id}</td>
                 <td className="border border-gray-300 p-2">{employee.nome}</td>
-                <td className="border border-gray-300 p-2">{employee.cpf}</td>
+                <td className="border border-gray-300 p-2">{MaskService.maskCPF(employee.cpf)}</td>
                 <td className="border border-gray-300 p-2">{employee.email}</td>
-                <td className="border border-gray-300 p-2">{employee.telefone}</td>
-                <td className="border border-gray-300 p-2">{employee.dataContratacao}</td>
-                <td className="border border-gray-300 p-2">{employee.ativo ? 'S' : 'N'}</td>
+                <td className="border border-gray-300 p-2">{MaskService.maskPhone(employee.telefone)}</td>
+                <td className="border border-gray-300 p-2">{MaskService.maskDate(employee.dataContratacao)}</td>
+                <td className="border border-gray-300 p-2">{employee.ativo ? 'Sim' : 'Não'}</td>
                 <td className="border border-gray-300 p-2 w-32">
                   <button
                     onClick={() => handleEdit(employee.id)}

@@ -9,6 +9,7 @@ import { RecoverPasswordSchema } from '@/helpers/validations';
 import { z } from 'zod';
 import { useForm } from '@/hooks/useForm';
 import { Controller } from 'react-hook-form';
+import toast from 'react-hot-toast';
 
 type RecoverPasswordData = z.infer<typeof RecoverPasswordSchema>;
 
@@ -26,9 +27,14 @@ const RecoverPassword = () => {
 
     try {
       await api.post('/auth/forgot-password', { email: data.email });
-      alert('Se este email estiver cadastrado, você receberá instruções para recuperar a senha.')
+      toast.success(
+        'Por favor, verifique seu email. Você receberá instruções para recuperar a senha.',
+        {
+          duration: 10000,
+        }
+      );
     } catch {
-      alert('Houve um erro ao tentar recuperar a senha. Por favor, tente novamente.');
+      toast.error('Houve um erro ao tentar recuperar a senha. Por favor, tente novamente.');
     } finally {
       setLoading(false);
     }

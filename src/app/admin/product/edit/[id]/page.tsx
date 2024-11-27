@@ -10,6 +10,7 @@ import { useForm } from '@/hooks/useForm';
 import api from '@/services/api';
 import { CreateProduct } from '@/@types/product';
 import { Controller } from 'react-hook-form';
+import Checkbox from '@/components/Checkbox';
 
 type ProductFormData = z.infer<typeof ProductSchema>;
 
@@ -33,6 +34,7 @@ export default function EditProduct(
       const data = await api.get(`/product/${id}`);
       setValue("description", data.descricao);
       setValue("price", String(data.preco));
+      setValue("active", data.ativo);
       setValue("amount", String(data.quantidade));
     } catch {
     } finally {
@@ -51,6 +53,7 @@ export default function EditProduct(
       const productObj: CreateProduct = {
         descricao: data.description,
         preco: Number(data.price),
+        ativo: !!data.active,
         quantidade: Number(data.amount)
       }
 
@@ -110,6 +113,19 @@ export default function EditProduct(
                 value={value}
                 onChange={onChange}
                 errorMessage={errors.price?.message}
+              />
+            )}
+          />
+          <Controller
+            control={control}
+            name='active'
+            render={({ field: { value, onChange }}) => (
+              <Checkbox
+                checked={value || false}
+                label='Ativo?'
+                name='active'
+                onChange={onChange}
+                errorMessage={errors.active?.message}
               />
             )}
           />

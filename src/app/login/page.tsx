@@ -42,8 +42,8 @@ const Login = () => {
       login(userObj, result.token)
       toast.success('Login realizado com sucesso');
       router.push('/admin');
-    } catch (error) {
-      console.log(error)
+    } catch {
+      toast.error('Erro ao realizar login. Tente novamente!');
     } finally {
       setLoading(false);
     }

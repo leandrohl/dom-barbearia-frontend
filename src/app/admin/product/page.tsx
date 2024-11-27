@@ -33,19 +33,6 @@ export default function Product() {
     console.log(loading);
   }, []);
 
-  // const handleDelete = async (id: number) => {
-  //   setLoading(true);
-
-  //   try {
-  //     await api.delete(`/product/${id}`);
-  //     const updatedProducts = products.filter(product => product.id !== id);
-  //     setProducts(updatedProducts);
-  //   } catch {
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
   const handleAddProduct = () => {
     router.push('/admin/product/add');
   };
@@ -71,6 +58,7 @@ export default function Product() {
               <th className="border border-gray-300 p-2">Descrição</th>
               <th className="border border-gray-300 p-2">Preço</th>
               <th className="border border-gray-300 p-2">Quantidade</th>
+              <th className="border border-gray-300 p-2">Ativo</th>
               <th className="border border-gray-300 p-2">Ações</th>
             </tr>
           </thead>
@@ -81,6 +69,7 @@ export default function Product() {
                 <td className="border border-gray-300 p-2">{product.descricao}</td>
                 <td className="border border-gray-300 p-2">{MaskService.maskMoney(product.preco)}</td>
                 <td className="border border-gray-300 p-2">{product.quantidade}</td>
+                <td className="border border-gray-300 p-2">{product.ativo ? 'Sim' : 'Não'}</td>
                 <td className="border border-gray-300 p-2 w-32">
                   <button
                     onClick={() => handleEdit(product.id)}

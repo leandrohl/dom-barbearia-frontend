@@ -12,6 +12,7 @@ import { IProfile } from '@/@types/profile';
 import api from '@/services/api';
 import Select from '@/components/Select';
 import { CreateUser } from '@/@types/user';
+import toast from 'react-hot-toast';
 
 type UserFormData = z.infer<typeof CreateUserSchema>;
 
@@ -54,9 +55,10 @@ export default function AddUser() {
       }
 
       await api.post("/users", userObj);
+      toast.success('Usuario criado com sucesso!');
       router.push('/admin/user');
-    } catch (error) {
-      console.error('Erro ao adicionar usuário:', error);
+    } catch {
+      toast.error('Erro ao criar usuario. Tente novamente!');
     } finally {
       setLoading(false);
     }

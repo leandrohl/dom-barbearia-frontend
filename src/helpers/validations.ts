@@ -36,13 +36,15 @@ export const ServiceSchema = z.object({
   employees: z.array(z.object({
     label: z.string(),
     value: z.number()
-  }), { message: "Selecione pelo menos um funcionário" }).min(1)
+  }), { message: "Selecione pelo menos um funcionário" }).min(1),
+  active: z.boolean().optional()
 });
 
 export const ProductSchema = z.object({
   description: z.string({ message: "Campo obrigatório" }),
   price: z.string({ message: "Campo obrigatório" }),
   amount: z.string({ message: "Campo obrigatório" }),
+  active: z.boolean().optional()
 });
 
 export const EmployeeSchema = z.object({

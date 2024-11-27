@@ -1,12 +1,18 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
+
+import Cookies from 'js-cookie';
+
 const baseUrl = "http://localhost:5000";
 
 const handleUnauthorized = (response: Response) => {
+  if (response.url.includes("/auth/login")) return false;
+
   if (response.status === 401) {
       window.location.href = '/login';
       localStorage.removeItem('user');
       localStorage.removeItem('token');
+      Cookies.remove('authToken');
       return true;
   }
   return false;

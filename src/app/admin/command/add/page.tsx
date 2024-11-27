@@ -15,9 +15,13 @@ import { IProduct } from '@/@types/product';
 import { SelectOption } from '@/@types/utils';
 import Input from '@/components/Input';
 import {
-  TrashIcon
+  TrashIcon,
+  QuestionMarkCircleIcon
 } from '@heroicons/react/24/outline'
 import { CreateCommand } from '@/@types/command';
+import toast from 'react-hot-toast';
+import FloatingActionButton from '@/components/FloatingButton';
+import Modal from '@/components/Modal';
 
 type CommandFormData = z.infer<typeof CommandSchema>;
 
@@ -27,6 +31,8 @@ export default function AddCommand() {
   const [products, setProducts] = useState<IProduct[]>([]);
 
   const [loading, setLoading] = useState(false);
+  const [modalHelp, setModalHelp] = useState(false);
+
   const router = useRouter();
 
   const types: SelectOption[] = [
@@ -64,7 +70,8 @@ export default function AddCommand() {
 
     try {
       const data = await api.get("/product") ;
-      setProducts(data);
+      const filteredProducts = data.filter((d: IService) => d.ativo)
+      setProducts(filteredProducts);
     } catch {
     } finally {
       setLoading(false);
@@ -76,7 +83,8 @@ export default function AddCommand() {
 
     try {
       const data = await api.get("/service");
-      setServices(data);
+      const filteredServices = data.filter((d: IService) => d.ativo)
+      setServices(filteredServices);
     } catch {
     } finally {
       setLoading(false);
@@ -107,9 +115,10 @@ export default function AddCommand() {
 
 
       await api.post("/command", commandObj);
+      toast.success('Comanda criada com sucesso!');
       router.push('/admin/command');
-    } catch (error) {
-      console.error('Erro ao adicionar perfil:', error);
+    } catch {
+      toast.error('Erro ao criar comanda. Tente novamente!');
     } finally {
       setLoading(false);
     }
@@ -310,6 +319,62 @@ export default function AddCommand() {
           </div>
         </div>
       </div>
+      <FloatingActionButton
+        icon={<QuestionMarkCircleIcon className="w-9 h-9"/>}
+        onClick={() => setModalHelp(true)}
+        variant='primary'
+      />
+      <Modal
+        isOpen={modalHelp}
+        onClose={() => setModalHelp(false)}
+      >
+        <div className="p-6 text-primary">
+          <h2 className="text-2xl font-semibold mb-4">Como Utilizar a Tela de Cadastro de Comanda</h2>
+
+          <p className="mb-4">
+            Esta tela é utilizada para registrar todos os itens de um pedido.
+          </p>
+
+          <h3 className="text-xl font-medium mb-2">Campos Obrigatórios:</h3>
+          <ul className="list-disc pl-5 mb-4">
+            <li>Cliente: Selecione o nome do cliente no cadastro.</li>
+            <li>Itens da Comanda: Adicione os produtos ou serviços solicitados.</li>
+          </ul>
+
+          <h3 className="text-xl font-medium mb-2">Tipos de Itens:</h3>
+          <ul className="list-disc pl-5 mb-4">
+            <li><strong>Serviço:</strong> Utilize para registrar serviços como corte de cabelo ou barba.</li>
+            <li><strong>Produto:</strong> Utilize para registrar produtos como bebidas.</li>
+          </ul>
+
+          <h3 className="text-xl font-medium mb-2">Como Adicionar Itens:</h3>
+          <ol className="list-decimal pl-5 mb-4">
+            <li>Selecione o tipo do item (serviço ou produto).</li>
+            <li>Preencha os campos específicos para cada tipo (e.g., serviço: escolha o serviço e o funcionário; produto: escolha o produto e a quantidade).</li>
+            <li>Clique em {`"Adicionar Item"`} para incluir o item na comanda.</li>
+          </ol>
+
+          <h3 className="text-xl font-medium mb-2">Calculando o Total:</h3>
+          <p className="mb-4">
+            O valor total da comanda é calculado automaticamente a partir dos itens adicionados.
+          </p>
+
+          <h3 className="text-xl font-medium mb-2">Finalizando a Comanda:</h3>
+          <ul className="list-disc pl-5 mb-4">
+            <li><strong>Cancelar:</strong> Cancele a comanda e retorne à tela inicial.</li>
+            <li><strong>Criar Comanda:</strong> Confirme a comanda e finalize o cadastro.</li>
+          </ul>
+
+          <div className="flex justify-end mt-4">
+            <Button
+              onClick={() => setModalHelp(false)}
+              variant='primary'
+            >
+              Fechar
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }

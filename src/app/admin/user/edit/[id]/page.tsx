@@ -13,6 +13,7 @@ import { Controller } from 'react-hook-form';
 import Select from '@/components/Select';
 import { IEditUser } from '@/@types/user';
 import { z } from 'zod';
+import toast from 'react-hot-toast';
 
 type UserFormData = z.infer<typeof EditUserSchema>;
 
@@ -72,9 +73,10 @@ export default function EditUser(
       }
 
       await api.put(`/users/${id}`, userObj);
+      toast.success('Usuario alterado com sucesso!');
       router.push('/admin/user');
-    } catch (error) {
-      console.error('Erro ao adicionar usuário:', error);
+    } catch  {
+      toast.error('Erro ao editar usuario. Tente novamente!');
     } finally {
       setLoading(false);
     }

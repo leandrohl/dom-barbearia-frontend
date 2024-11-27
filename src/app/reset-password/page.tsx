@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Controller } from "react-hook-form";
 import { z } from "zod";
+import toast from 'react-hot-toast';
 
 type PasswordData = z.infer<typeof PasswordSchema>;
 
@@ -38,6 +39,9 @@ export default function ResetPassword() {
         resetToken: token,
         newPassword: data.password
       });
+      toast.success(
+        'Senha alterada com sucesso! Por favor, faça o login com a nova senha.'
+      );
       router.push('/login');
     } catch {
     } finally {

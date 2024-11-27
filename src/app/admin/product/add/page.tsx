@@ -10,6 +10,7 @@ import { z } from 'zod';
 import { CreateProduct } from '@/@types/product';
 import api from '@/services/api';
 import { Controller } from 'react-hook-form';
+import Checkbox from '@/components/Checkbox';
 
 type ProductFormData = z.infer<typeof ProductSchema>;
 
@@ -30,7 +31,8 @@ export default function AddProduct() {
       const productObj: CreateProduct = {
         descricao: data.description,
         preco: Number(data.price),
-        quantidade: Number(data.amount)
+        quantidade: Number(data.amount),
+        ativo: !!data.active,
       }
 
       await api.post("/product", productObj);
@@ -91,6 +93,19 @@ export default function AddProduct() {
                 errorMessage={errors.price?.message}
               />
             )}
+          />
+          <Controller
+            control={control}
+            name='active'
+            render={({ field: { value, onChange }}) => (
+              <Checkbox
+                checked={value || false}
+                label='Ativo?'
+                name='active'
+                onChange={onChange}
+                errorMessage={errors.active?.message}
+              />
+              )}
           />
           <div className='flex justify-end gap-4'>
             <Button

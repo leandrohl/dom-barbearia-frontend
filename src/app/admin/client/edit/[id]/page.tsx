@@ -11,6 +11,7 @@ import { useForm } from '@/hooks/useForm';
 import api from '@/services/api';
 import { CreateClient } from '@/@types/client';
 import { Controller } from 'react-hook-form';
+import toast from 'react-hot-toast';
 
 type ClientFormData = z.infer<typeof ClientSchema>;
 
@@ -70,9 +71,10 @@ export default function EditUser(
       }
 
       await api.put(`/client/${id}`, clientObj);
+      toast.success('Cliente alterado com sucesso!');
       router.push('/admin/client');
-    } catch (error) {
-      console.error('Erro ao editar cliente:', error);
+    } catch {
+      toast.error('Erro ao editar cliente. Tente novamente!');
     } finally {
       setLoading(false);
     }

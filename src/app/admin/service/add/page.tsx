@@ -11,8 +11,8 @@ import { CreateService } from '@/@types/service';
 import api from '@/services/api';
 import { Controller } from 'react-hook-form';
 import { IEmployee } from '@/@types/employee';
-import Select from '@/components/Select';
 import MultiSelect from '@/components/MultiSelect';
+import Checkbox from '@/components/Checkbox';
 
 type ServiceFormData = z.infer<typeof ServiceSchema>;
 
@@ -50,6 +50,7 @@ export default function AddService() {
       const serviceObj: CreateService = {
         descricao: data.description,
         preco: Number(data.price),
+        ativo: !!data.active,
         funcionarios: data.employees.map(employee => employee.value)
       }
 
@@ -112,6 +113,19 @@ export default function AddService() {
                 value={value}
                 errorMessage={errors.employees?.message}
              />
+            )}
+          />
+          <Controller
+            control={control}
+            name='active'
+            render={({ field: { value, onChange }}) => (
+              <Checkbox
+                checked={value || false}
+                label='Ativo?'
+                name='active'
+                onChange={onChange}
+                errorMessage={errors.active?.message}
+              />
             )}
           />
           <div className='flex justify-end gap-4'>

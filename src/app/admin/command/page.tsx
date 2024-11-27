@@ -12,38 +12,38 @@ import api from '@/services/api';
 import { ICommand } from '@/@types/command';
 import Modal from '@/components/Modal';
 import MaskService from '@/helpers/masks';
+import { useLoading } from '@/context/LoadingContext';
 
 export default function Command() {
   const [commands, setCommands] = useState<ICommand[]>([]);
   const [commandSelected, setCommandSelected] = useState<ICommand | null>(null);
 
-  const [loading, setLoading] = useState(true);
   const [isModalOpen, setModalOpen] = useState(false);
 
   const router = useRouter();
+  const { startLoading, stopLoading } = useLoading()
 
   const openModal = () => setModalOpen(true);
   const closeModal = () => setModalOpen(false);
 
   const fetchCommands = async () => {
-    setLoading(true);
+    startLoading();
 
     try {
       const data = await api.get("/command");
       setCommands(data);
     } catch {
     } finally {
-      setLoading(false);
+      stopLoading();
     }
   }
 
   useEffect(() => {
     fetchCommands();
-    console.log(loading)
   }, []);
 
   const searchCommandById = async (id: number) => {
-    setLoading(true);
+    startLoading();
 
     try {
       const data = await api.get(`/command/${id}`);
@@ -51,7 +51,7 @@ export default function Command() {
       openModal();
     } catch {
     } finally {
-      setLoading(false);
+      stopLoading();
     }
   }
 
@@ -64,7 +64,7 @@ export default function Command() {
   };
 
   return (
-    <div className="flex h-screen">
+    <div className="flex">
       <div className="flex-1 p-4 bg-gray-100">
         <h1 className="text-2xl font-bold mb-4 text-primary">Listagem de Comandas</h1>
         <Button
@@ -126,7 +126,7 @@ export default function Command() {
                   <tr key={index}>
                     <td className="border border-gray-300 p-2">{item.produto?.descricao}</td>
                     <td className="border border-gray-300 p-2">{item.quantidade}</td>
-                    <td className="border border-gray-300 p-2">{item.valor}</td>
+                    <td className="border border-gray-300 p-2">{MaskService.maskMoney(item.valor)}</td>
                   </tr>
                 ))}
             </tbody>
@@ -148,7 +148,7 @@ export default function Command() {
                   <tr key={index}>
                     <td className="border border-gray-300 p-2">{item.servico?.descricao}</td>
                     <td className="border border-gray-300 p-2">{item.funcionario?.nome}</td>
-                    <td className="border border-gray-300 p-2">{item.valor}</td>
+                    <td className="border border-gray-300 p-2">{MaskService.maskMoney(item.valor)}</td>
                   </tr>
                 ))}
             </tbody>

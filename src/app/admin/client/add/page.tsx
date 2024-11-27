@@ -11,6 +11,7 @@ import { useForm } from '@/hooks/useForm';
 import { CreateClient } from '@/@types/client';
 import api from '@/services/api';
 import { Controller } from 'react-hook-form';
+import toast from 'react-hot-toast';
 
 type ClientFormData = z.infer<typeof ClientSchema>;
 
@@ -42,9 +43,10 @@ export default function AddClient() {
       }
 
       await api.post("/client", clientObj);
+      toast.success('Cliente criado com sucesso!');
       router.push('/admin/client');
-    } catch (error) {
-      console.error('Erro ao adicionar cliente:', error);
+    } catch {
+      toast.error('Erro ao criar cliente. Tente novamente!');
     } finally {
       setLoading(false);
     }

@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import Cookies from 'js-cookie';
 
 interface User {
   name: string;
@@ -36,6 +37,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const login = (user: User, token: string ) => {
     setUser(user);
     setToken(token);
+    Cookies.set('authToken', token);
     localStorage.setItem('user', JSON.stringify(user));
     localStorage.setItem('token', token);
   };
@@ -43,6 +45,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const logout = () => {
     setUser(null);
     setToken(undefined);
+    Cookies.remove('authToken');
     localStorage.removeItem('user');
     localStorage.removeItem('token');
     router.push('/login');

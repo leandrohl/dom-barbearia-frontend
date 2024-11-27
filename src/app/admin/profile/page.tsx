@@ -10,31 +10,31 @@ import {
 import Button from '@/components/Button';
 import api from '@/services/api';
 import { IProfile } from '@/@types/profile';
+import { useLoading } from '@/context/LoadingContext';
 
 export default function Profile() {
   const [profiles, setProfiles] = useState<IProfile[]>([]);
-  const [loading, setLoading] = useState(true);
   const router = useRouter();
+  const { startLoading, stopLoading } = useLoading()
 
   const fetchProfiles = async () => {
-    setLoading(true);
+    startLoading();
 
     try {
       const data = await api.get("/profile");
       setProfiles(data);
     } catch {
     } finally {
-      setLoading(false);
+      stopLoading();
     }
   }
 
   useEffect(() => {
     fetchProfiles();
-    console.log(loading);
   }, []);
 
   const handleDelete = async (id: number) => {
-    setLoading(true);
+    startLoading();
 
     try {
       await api.delete(`/profile/${id}`);
@@ -42,7 +42,7 @@ export default function Profile() {
       setProfiles(updatedProfiles);
     } catch {
     } finally {
-      setLoading(false);
+      stopLoading();
     }
   };
 

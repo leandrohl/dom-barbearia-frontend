@@ -10,6 +10,7 @@ import { z } from 'zod';
 import { useForm } from '@/hooks/useForm';
 import { CreateProfile } from '@/@types/profile';
 import { Controller } from 'react-hook-form';
+import toast from 'react-hot-toast';
 
 type ProfileFormData = z.infer<typeof ProfileSchema>;
 
@@ -51,9 +52,10 @@ export default function EditProfile(
       }
 
       await api.put(`/profile/${id}`, profileObj);
+      toast.success('Perfil alterado com sucesso!');
       router.push('/admin/profile');
-    } catch (error) {
-      console.error('Erro ao adicionar perfil:', error);
+    } catch {
+      toast.error('Erro ao editar perfil. Tente novamente!');
     } finally {
       setLoading(false);
     }

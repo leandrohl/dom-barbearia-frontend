@@ -33,19 +33,6 @@ export default function Service() {
     console.log(loading);
   }, []);
 
-  // const handleDelete = async (id: number) => {
-  //   setLoading(true);
-
-  //   try {
-  //     await api.delete(`/service/${id}`);
-  //     const updatedServices = services.filter(service => service.id !== id);
-  //     setServices(updatedServices);
-  //   } catch {
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
   const handleAddUser = () => {
     router.push('/admin/service/add');
   };
@@ -70,6 +57,7 @@ export default function Service() {
               <th className="border border-gray-300 p-2">ID</th>
               <th className="border border-gray-300 p-2">Descrição</th>
               <th className="border border-gray-300 p-2">Preço</th>
+              <th className="border border-gray-300 p-2">Ativo</th>
               <th className="border border-gray-300 p-2">Ações</th>
             </tr>
           </thead>
@@ -79,6 +67,7 @@ export default function Service() {
                 <td className="border border-gray-300 p-2">{service.id}</td>
                 <td className="border border-gray-300 p-2">{service.descricao}</td>
                 <td className="border border-gray-300 p-2">{MaskService.maskMoney(service.preco)}</td>
+                <td className="border border-gray-300 p-2">{service.ativo ? 'Sim' : 'Não'}</td>
                 <td className="border border-gray-300 p-2 w-32">
                   <button
                     onClick={() => handleEdit(service.id)}

@@ -11,14 +11,15 @@ import Button from '@/components/Button';
 import api from '@/services/api';
 import { IUser } from '@/@types/user'
 import { IProfile } from '@/@types/profile';
+import { useLoading } from '@/context/LoadingContext';
 
 export default function User() {
   const [users, setUsers] = useState<IUser[]>([]);
-  const [loading, setLoading] = useState(true);
   const router = useRouter();
+  const { startLoading, stopLoading } = useLoading()
 
   const fetchUsers = async () => {
-    setLoading(true);
+    startLoading();
 
     try {
       const users = await api.get("/users");
@@ -32,7 +33,7 @@ export default function User() {
       setUsers(usersWithProfiles);
     } catch {
     } finally {
-      setLoading(false);
+      stopLoading();
     }
   }
 
@@ -41,7 +42,7 @@ export default function User() {
   }, []);
 
   const handleDelete = async (id: number) => {
-    setLoading(true);
+    startLoading();
 
     try {
       await api.delete(`/users/${id}`);
@@ -49,7 +50,7 @@ export default function User() {
       setUsers(updatedUsers);
     } catch {
     } finally {
-      setLoading(false);
+      stopLoading();
     }
   };
 

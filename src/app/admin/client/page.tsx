@@ -11,31 +11,31 @@ import Button from '@/components/Button';
 import api from '@/services/api';
 import { IClient } from '@/@types/client';
 import MaskService from '@/helpers/masks';
+import { useLoading } from '@/context/LoadingContext';
 
 export default function Client() {
   const [customers, setCustomers] = useState<IClient[]>([]);
-  const [loading, setLoading] = useState(true);
   const router = useRouter();
+  const { startLoading, stopLoading } = useLoading()
 
   const fetchCustomers = async () => {
-    setLoading(true);
+    startLoading();
 
     try {
       const data = await api.get("/client");
       setCustomers(data);
     } catch {
     } finally {
-      setLoading(false);
+      stopLoading();
     }
   }
 
   useEffect(() => {
     fetchCustomers();
-    console.log(loading);
   }, []);
 
   const handleDelete = async (id: number) => {
-    setLoading(true);
+    startLoading();
 
     try {
       await api.delete(`/client/${id}`);
@@ -43,7 +43,7 @@ export default function Client() {
       setCustomers(updatedCustomers);
     } catch {
     } finally {
-      setLoading(false);
+      stopLoading();
     }
   };
 

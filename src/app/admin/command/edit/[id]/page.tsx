@@ -18,6 +18,7 @@ import {
   TrashIcon
 } from '@heroicons/react/24/outline'
 import { CreateCommand, OrderItemResponse } from '@/@types/command';
+import toast from 'react-hot-toast';
 
 type CommandFormData = z.infer<typeof CommandSchema>;
 
@@ -135,9 +136,10 @@ export default function EditCommand(
 
 
       await api.put(`/command/${id}`, commandObj);
+      toast.success('Comanda alterada com sucesso!');
       router.push('/admin/command');
-    } catch (error) {
-      console.error('Erro ao adicionar perfil:', error);
+    } catch {
+      toast.error('Erro ao editar comanda. Tente novamente!');
     } finally {
       setLoading(false);
     }

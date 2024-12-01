@@ -135,7 +135,7 @@ export default function AddCommand() {
   };
 
   return (
-    <div className="flex h-screen">
+    <div className="flex">
       <div className="flex-1 p-4 bg-gray-100">
         <h1 className="text-2xl font-bold mb-4 text-primary">Cadastrar Comanda</h1>
         <div className="bg-white p-6 rounded shadow-md">
@@ -269,7 +269,7 @@ export default function AddCommand() {
                     render={({ field: { onChange, value } }) => (
                       <Input
                         onChange={onChange}
-                        value={value || ""}
+                        value={value || 0}
                         label="Valor"
                         name='value'
                         variant="secondary"

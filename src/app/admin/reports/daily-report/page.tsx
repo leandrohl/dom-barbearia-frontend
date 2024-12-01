@@ -9,52 +9,57 @@ import Select from '@/components/Select';
 import { IClientWithStatistics } from '@/@types/client';
 import { classifications } from '@/content/classifications';
 import { useReactToPrint } from 'react-to-print';
+import { useLoading } from '@/context/LoadingContext';
+import toast from 'react-hot-toast';
+import MaskService from '@/helpers/masks';
+import { formatDate } from '@/helpers/date';
 
 export default function DailyReport() {
   const [date, setDate] = useState("");
   const [employees, setEmployees] = useState<IEmployee[]>([]);
-  const [loading, setLoading] = useState(true);
   const [employeeSelected, setEmployeeSelected] = useState('');
   const [typeSelected, setTypeSelected] = useState('Barbearia');
   const [reportClients, setReportClients] = useState<IClientWithStatistics[]>([]);
   const [reportEmployees, setReportEmployees] = useState<IEmployeeWithStatistics[]>([]);
 
+  const { startLoading, stopLoading } = useLoading()
+
   const contentRef = useRef<HTMLDivElement>(null);
   const reactToPrintFn = useReactToPrint({ contentRef });
 
   const fetchEmployees = async () => {
-    setLoading(true);
+    startLoading();
 
     try {
       const data = await api.get("/employees");
       setEmployees(data);
     } catch {
     } finally {
-      setLoading(false);
+      stopLoading();
     }
   }
 
   const fetchReportEmployees = async () => {
-    setLoading(true);
+    startLoading();
     try {
       const data = await api.get(`/employees/statistics?startDate=${date}&endDate=${date}`);
       setReportEmployees(data);
     } catch {
-      // Handle error
+      toast.error('Erro ao buscar dados relatório. Tente novamente mais tarde!');
     } finally {
-      setLoading(false);
+      stopLoading();
     }
   };
 
   const fetchReportClients = async () => {
-    setLoading(true);
+    startLoading();
     try {
       const data = await api.get(`/client/classification?date=${date}&employeeId=${employeeSelected}`);
       setReportClients(data);
     } catch {
-      // Handle error
+      toast.error('Erro ao buscar dados relatório. Tente novamente mais tarde!');
     } finally {
-      setLoading(false);
+      stopLoading();
     }
   };
 
@@ -89,11 +94,7 @@ export default function DailyReport() {
             </tr>
           </thead>
           <tbody>
-            {loading ? (
-              <tr>
-                <td colSpan={9} className="text-center p-4">Carregando...</td>
-              </tr>
-            ) : (
+            {(
               reportEmployees.length === 0 ? (
                 <tr>
                   <td colSpan={9} className="text-center p-4">Nenhum dado encontrado.</td>
@@ -109,7 +110,7 @@ export default function DailyReport() {
                     <td className="border border-gray-300 p-2">{employee.classificacaoDosClientes.Otimo}</td>
                     <td className="border border-gray-300 p-2">{employee.classificacaoDosClientes.Regular}</td>
                     <td className="border border-gray-300 p-2">{employee.classificacaoDosClientes.Ruim}</td>
-                    <td className="border border-gray-300 p-2">{employee.faturamentoTotal}</td>
+                    <td className="border border-gray-300 p-2">{MaskService.maskMoney(employee.faturamentoTotal)}</td>
                     </tr>
                   ))
                 )
@@ -127,14 +128,11 @@ export default function DailyReport() {
                 <th className="border border-gray-300 p-2">Classificação</th>
                 <th className="border border-gray-300 p-2">Frequência de Visitas</th>
                 <th className="border border-gray-300 p-2">Valor Gasto Total</th>
+                <th className="border border-gray-300 p-2">Última Visita</th>
               </tr>
             </thead>
             <tbody>
-              {loading ? (
-                <tr>
-                  <td colSpan={9} className="text-center p-4">Carregando...</td>
-                </tr>
-              ) : (
+              {(
                 reportClients.length === 0 ? (
                   <tr>
                     <td colSpan={9} className="text-center p-4 text-primary">Nenhum dado encontrado.</td>
@@ -154,8 +152,8 @@ export default function DailyReport() {
                         </div>
                       </td>
                       <td className="border border-gray-300 p-2">{client.frequenciaVisitas}</td>
-                      <td className="border border-gray-300 p-2">{client.valorGastoTotal}</td>
-                      <td className="border border-gray-300 p-2">{client.ultimaVisita}</td>
+                      <td className="border border-gray-300 p-2">{MaskService.maskMoney(client.valorGastoTotal)}</td>
+                      <td className="border border-gray-300 p-2">{formatDate(client.ultimaVisita)}</td>
                     </tr>
                   ))
                 )

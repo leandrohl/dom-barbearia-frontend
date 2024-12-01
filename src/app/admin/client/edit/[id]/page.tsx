@@ -12,6 +12,7 @@ import api from '@/services/api';
 import { CreateClient } from '@/@types/client';
 import { Controller } from 'react-hook-form';
 import toast from 'react-hot-toast';
+import MaskService from '@/helpers/masks';
 
 type ClientFormData = z.infer<typeof ClientSchema>;
 
@@ -62,12 +63,12 @@ export default function EditUser(
         email: data.email,
         bairro: data.neighborhood,
         cidade: data.city,
-        cpf: data.cpf,
+        cpf: MaskService.unMask(data.cpf),
         dataAniversario: data.birthdayDate,
         endereco: data.address,
         observacao: data.observation,
         profissao: data.occupation,
-        telefone: data.phone
+        telefone: MaskService.unMask(data.phone)
       }
 
       await api.put(`/client/${id}`, clientObj);
@@ -125,7 +126,7 @@ export default function EditUser(
                   label='Telefone'
                   type="text"
                   variant='secondary'
-                  value={value}
+                  value={MaskService.maskPhone(value)}
                   onChange={onChange}
                   errorMessage={errors.phone?.message}
                 />
@@ -140,7 +141,7 @@ export default function EditUser(
                   label='CPF'
                   type="text"
                   variant='secondary'
-                  value={value}
+                  value={MaskService.maskCPF(value)}
                   onChange={onChange}
                   errorMessage={errors.cpf?.message}
                 />

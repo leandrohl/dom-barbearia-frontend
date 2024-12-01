@@ -10,27 +10,27 @@ import Button from '@/components/Button';
 import api from '@/services/api';
 import { IService } from '@/@types/service';
 import MaskService from '@/helpers/masks';
+import { useLoading } from '@/context/LoadingContext';
 
 export default function Service() {
   const [services, setServices] = useState<IService[]>([]);
-  const [loading, setLoading] = useState(true);
   const router = useRouter();
+  const { startLoading, stopLoading } = useLoading()
 
   const fetchServices = async () => {
-    setLoading(true);
+    startLoading()
 
     try {
       const data = await api.get("/service");
       setServices(data);
     } catch {
     } finally {
-      setLoading(false);
+      stopLoading()
     }
   }
 
   useEffect(() => {
     fetchServices();
-    console.log(loading);
   }, []);
 
   const handleAddUser = () => {
@@ -75,12 +75,6 @@ export default function Service() {
                   >
                     <PencilIcon className="w-6 h-6" />
                   </button>
-                  {/* <button
-                    onClick={() => handleDelete(service.id)}
-                    className="p-1 bg-primary text-white rounded"
-                  >
-                    <TrashIcon className="w-6 h-6" />
-                  </button> */}
                 </td>
               </tr>
             ))}

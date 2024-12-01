@@ -6,26 +6,34 @@ import api from '@/services/api';
 import Input from '@/components/Input';
 import { IEmployeeWithStatistics } from '@/@types/employee';
 import { useReactToPrint } from 'react-to-print';
+import { useLoading } from '@/context/LoadingContext';
+import toast from 'react-hot-toast';
+import MaskService from '@/helpers/masks';
 
 export default function BarberProduction() {
   const [searchTerm, setSearchTerm] = useState('');
   const [startDate, setStartDate] = useState('');
   const [finalDate, setFinalDate] = useState('');
   const [employees, setEmployees] = useState<IEmployeeWithStatistics[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { startLoading, stopLoading } = useLoading()
 
   const contentRef = useRef<HTMLDivElement>(null);
   const reactToPrintFn = useReactToPrint({ contentRef });
 
   const filterEmployees = async () => {
-    setLoading(true);
+    if (new Date(finalDate) <= new Date(startDate)) {
+      toast.error('A data final deve ser maior que a data inicial!');
+      return;
+    }
+
+    startLoading();
     try {
       const data = await api.get(`/employees/statistics?startDate=${startDate}&endDate=${finalDate}`);
       setEmployees(data);
     } catch {
-      // Handle error
+      toast.error('Erro ao buscar dados relatório. Tente novamente mais tarde!');
     } finally {
-      setLoading(false);
+      stopLoading();
     }
   };
 
@@ -84,7 +92,7 @@ export default function BarberProduction() {
             </Button>
           </div>
         </div>
-        <div ref={contentRef}>
+        <div>
           <table className="min-w-full bg-white border border-gray-300 text-primary">
             <thead>
               <tr>
@@ -100,11 +108,7 @@ export default function BarberProduction() {
               </tr>
             </thead>
             <tbody>
-              {loading ? (
-                <tr>
-                  <td colSpan={6} className="text-center p-4">Carregando...</td>
-                </tr>
-              ) : (
+              {(
                 filteredEmployees.map(employee => (
                   <tr key={employee.id}>
                     <td className="border border-gray-300 p-2">{employee.id}</td>
@@ -115,7 +119,7 @@ export default function BarberProduction() {
                     <td className="border border-gray-300 p-2">{employee.classificacaoDosClientes.Otimo}</td>
                     <td className="border border-gray-300 p-2">{employee.classificacaoDosClientes.Regular}</td>
                     <td className="border border-gray-300 p-2">{employee.classificacaoDosClientes.Ruim}</td>
-                    <td className="border border-gray-300 p-2">{employee.faturamentoTotal}</td>
+                    <td className="border border-gray-300 p-2">{MaskService.maskMoney( employee.faturamentoTotal)}</td>
                   </tr>
                 ))
               )}

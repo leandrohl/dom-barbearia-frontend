@@ -10,25 +10,27 @@ import { classifications } from '@/content/classifications';
 import { useReactToPrint } from 'react-to-print';
 import { formatDate } from '@/helpers/date';
 import MaskService from '@/helpers/masks';
+import { useLoading } from '@/context/LoadingContext';
+import toast from 'react-hot-toast';
 
 export default function ClientClassification() {
   const [clients, setClients] = useState<IClientWithStatistics[]>([]);
-  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [classificationSelected, setClassificationSelected] = useState('');
+  const { startLoading, stopLoading } = useLoading()
 
   const contentRef = useRef<HTMLDivElement>(null);
   const reactToPrintFn = useReactToPrint({ contentRef });
 
   const fetchClients = async () => {
-    setLoading(true);
+    startLoading();
     try {
       const data = await api.get('/client/classification');
       setClients(data);
     } catch {
-      // Handle error
+      toast.error('Erro ao buscar dados relatório. Tente novamente!');
     } finally {
-      setLoading(false);
+      stopLoading();
     }
   };
 
@@ -88,11 +90,7 @@ export default function ClientClassification() {
             </tr>
           </thead>
           <tbody>
-            {loading ? (
-              <tr>
-                <td colSpan={6} className="text-center p-4">Carregando...</td>
-              </tr>
-            ) : (
+            {(
               filteredClients.map(client => (
                 <tr key={client.id}>
                   <td className="border border-gray-300 p-2">{client.id}</td>

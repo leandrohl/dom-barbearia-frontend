@@ -35,12 +35,18 @@ function maskMoney(value: string | number): string {
   });
 }
 
+function unMask(value: string): string {
+  const cleanedValue = value.replace(/\D/g, '')
+  return cleanedValue;
+}
+
 const MaskService = {
   maskCPF,
   maskCEP,
   maskMoney,
   maskDate,
-  maskPhone
+  maskPhone,
+  unMask
 };
 
 export default MaskService;

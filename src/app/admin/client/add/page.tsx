@@ -12,6 +12,7 @@ import { CreateClient } from '@/@types/client';
 import api from '@/services/api';
 import { Controller } from 'react-hook-form';
 import toast from 'react-hot-toast';
+import MaskService from '@/helpers/masks';
 
 type ClientFormData = z.infer<typeof ClientSchema>;
 
@@ -22,7 +23,7 @@ export default function AddClient() {
   const {
     control,
     handleSubmit,
-    formState: { errors }
+    formState: { errors },
   } = useForm(ClientSchema)
 
   const onSubmit = async (data: ClientFormData) => {
@@ -34,14 +35,13 @@ export default function AddClient() {
         email: data.email,
         bairro: data.neighborhood,
         cidade: data.city,
-        cpf: data.cpf,
+        cpf: MaskService.unMask(data.cpf),
         dataAniversario: data.birthdayDate,
         endereco: data.address,
         observacao: data.observation,
         profissao: data.occupation,
-        telefone: data.phone
+        telefone: MaskService.unMask(data.phone)
       }
-
       await api.post("/client", clientObj);
       toast.success('Cliente criado com sucesso!');
       router.push('/admin/client');
@@ -53,7 +53,7 @@ export default function AddClient() {
   };
 
   return (
-    <div className="flex h-screen">
+    <div className="flex">
       <div className="flex-1 p-4 bg-gray-100">
         <h1 className="text-2xl font-bold mb-4 text-primary">Cadastrar Cliente</h1>
         <div className="bg-white p-6 rounded shadow-md ">
@@ -97,7 +97,7 @@ export default function AddClient() {
                   label='Telefone'
                   type="text"
                   variant='secondary'
-                  value={value}
+                  value={MaskService.maskPhone(value)}
                   onChange={onChange}
                   errorMessage={errors.phone?.message}
                 />
@@ -112,7 +112,7 @@ export default function AddClient() {
                   label='CPF'
                   type="text"
                   variant='secondary'
-                  value={value}
+                  value={MaskService.maskCPF(value)}
                   onChange={onChange}
                   errorMessage={errors.cpf?.message}
                 />

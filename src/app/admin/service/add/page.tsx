@@ -13,6 +13,7 @@ import { Controller } from 'react-hook-form';
 import { IEmployee } from '@/@types/employee';
 import MultiSelect from '@/components/MultiSelect';
 import Checkbox from '@/components/Checkbox';
+import toast from 'react-hot-toast';
 
 type ServiceFormData = z.infer<typeof ServiceSchema>;
 
@@ -55,9 +56,10 @@ export default function AddService() {
       }
 
       await api.post("/service", serviceObj);
+      toast.success('Serviço criado com sucesso!');
       router.push('/admin/service');
-    } catch (error) {
-      console.error('Erro ao adicionar serviço:', error);
+    } catch {
+      toast.error('Erro ao criar serviço. Tente novamente!');
     } finally {
       setLoading(false);
     }

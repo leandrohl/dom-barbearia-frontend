@@ -11,6 +11,7 @@ import api from '@/services/api';
 import { CreateProduct } from '@/@types/product';
 import { Controller } from 'react-hook-form';
 import Checkbox from '@/components/Checkbox';
+import toast from 'react-hot-toast';
 
 type ProductFormData = z.infer<typeof ProductSchema>;
 
@@ -58,9 +59,10 @@ export default function EditProduct(
       }
 
       await api.put(`/product/${id}`, productObj);
+      toast.success('Produto alterado com sucesso!');
       router.push('/admin/product');
-    } catch (error) {
-      console.error('Erro ao adicionar produto:', error);
+    } catch  {
+      toast.error('Erro ao editar produto. Tente novamente!');
     } finally {
       setLoading(false);
     }
@@ -108,7 +110,7 @@ export default function EditProduct(
               <Input
                 name='amount'
                 label='Quantidade'
-                type="text"
+                type="number"
                 variant='secondary'
                 value={value}
                 onChange={onChange}

@@ -11,31 +11,31 @@ import Button from '@/components/Button';
 import api from '@/services/api';
 import { IEmployee } from '@/@types/employee';
 import MaskService from '@/helpers/masks';
+import { useLoading } from '@/context/LoadingContext';
 
 export default function Employee() {
   const [employees, setEmployees] = useState<IEmployee[]>([]);
-  const [loading, setLoading] = useState(true);
   const router = useRouter();
+  const { startLoading, stopLoading } = useLoading()
 
   const fetchEmployees = async () => {
-    setLoading(true);
+    startLoading();
 
     try {
       const data = await api.get("/employees");
       setEmployees(data);
     } catch {
     } finally {
-      setLoading(false);
+      stopLoading();
     }
   }
 
   useEffect(() => {
     fetchEmployees();
-    console.log(loading);
   }, []);
 
   const handleDelete = async (id: number) => {
-    setLoading(true);
+    startLoading();
 
     try {
       await api.delete(`/employees/${id}`);
@@ -43,7 +43,7 @@ export default function Employee() {
       setEmployees(updatedEmployee);
     } catch {
     } finally {
-      setLoading(false);
+      stopLoading();
     }
   };
 

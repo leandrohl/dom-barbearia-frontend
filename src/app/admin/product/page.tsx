@@ -10,27 +10,27 @@ import Button from '@/components/Button';
 import api from '@/services/api';
 import { IProduct } from '@/@types/product';
 import MaskService from '@/helpers/masks';
+import { useLoading } from '@/context/LoadingContext';
 
 export default function Product() {
   const [products, setProducts] = useState<IProduct[]>([]);
-  const [loading, setLoading] = useState(true);
   const router = useRouter();
+  const { startLoading, stopLoading } = useLoading()
 
   const fetchProducts = async () => {
-    setLoading(true);
+    startLoading();
 
     try {
       const data = await api.get("/product");
       setProducts(data);
     } catch {
     } finally {
-      setLoading(false);
+      stopLoading();
     }
   }
 
   useEffect(() => {
     fetchProducts();
-    console.log(loading);
   }, []);
 
   const handleAddProduct = () => {
@@ -77,12 +77,6 @@ export default function Product() {
                   >
                     <PencilIcon className="w-6 h-6" />
                   </button>
-                  {/* <button
-                    onClick={() => handleDelete(product.id)}
-                    className="p-1 bg-primary text-white rounded"
-                  >
-                    <TrashIcon className="w-6 h-6" />
-                  </button> */}
                 </td>
               </tr>
             ))}

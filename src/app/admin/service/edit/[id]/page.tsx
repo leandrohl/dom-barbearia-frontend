@@ -14,6 +14,7 @@ import { Controller } from 'react-hook-form';
 import MultiSelect from '@/components/MultiSelect';
 import { IEmployee } from '@/@types/employee';
 import Checkbox from '@/components/Checkbox';
+import toast from 'react-hot-toast';
 
 type ServiceFormData = z.infer<typeof ServiceSchema>;
 
@@ -84,9 +85,10 @@ export default function EditService(
       }
 
       await api.put(`/service/${id}`, serviceObj);
+      toast.success('Serviço alterado com sucesso!');
       router.push('/admin/service');
-    } catch (error) {
-      console.error('Erro ao adicionar serviço:', error);
+    } catch {
+      toast.error('Erro ao editar serviço. Tente novamente!');
     } finally {
       setLoading(false);
     }

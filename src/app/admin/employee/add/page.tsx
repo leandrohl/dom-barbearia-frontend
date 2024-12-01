@@ -12,6 +12,8 @@ import { CreateEmployee } from '@/@types/employee';
 import api from '@/services/api';
 import { Controller } from 'react-hook-form';
 import Checkbox from '@/components/Checkbox';
+import toast from 'react-hot-toast';
+import MaskService from '@/helpers/masks';
 
 type EmployeeFormData = z.infer<typeof EmployeeSchema>;
 
@@ -32,16 +34,17 @@ export default function AddEmployee() {
       const employeeObj: CreateEmployee = {
         nome: data.name,
         email: data.email,
-        cpf: data.cpf,
+        cpf: MaskService.unMask(data.cpf),
         dataContratacao: data.hiringDate,
-        telefone: data.phone,
+        telefone: MaskService.unMask(data.phone),
         ativo: !!data.active
       }
 
       await api.post("/employees", employeeObj);
+      toast.success('Funcionário criado com sucesso!');
       router.push('/admin/employee');
-    } catch (error) {
-      console.error('Erro ao adicionar funcionario:', error);
+    } catch {
+      toast.error('Erro ao criar funcionário. Tente novamente!');
     } finally {
       setLoading(false);
     }
@@ -92,7 +95,7 @@ export default function AddEmployee() {
                   label='Telefone'
                   type="text"
                   variant='secondary'
-                  value={value}
+                  value={MaskService.maskPhone(value)}
                   onChange={onChange}
                   errorMessage={errors.phone?.message}
                 />
@@ -107,7 +110,7 @@ export default function AddEmployee() {
                   label='CPF'
                   type="text"
                   variant='secondary'
-                  value={value}
+                  value={MaskService.maskCPF(value)}
                   onChange={onChange}
                   errorMessage={errors.cpf?.message}
                 />

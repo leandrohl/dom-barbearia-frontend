@@ -56,7 +56,7 @@ export default function Client() {
   };
 
   return (
-    <div className="flex h-screen">
+    <div className="flex">
       <div className="flex-1 p-4 bg-gray-100">
         <h1 className="text-2xl font-bold mb-4 text-primary">Listagem de Clientes</h1>
         <Button
